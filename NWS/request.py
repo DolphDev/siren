@@ -2,8 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-class report:		
-					#Handles reports
+class report:							#Handles reports
 	def __init__(self,id_url,gdata=True):
 
 		self.id  = id_url
@@ -38,9 +37,9 @@ class report:
 		return store
 		
 
-class alert:
+class nws:
 
-	def __init__(self,state="usa",gdata=True):
+	def __init__(self,state="usa", gdata=True):
 
 		self.limit = 5
 		if gdata:
@@ -58,14 +57,14 @@ class alert:
 		except:
 			return False
 
-	def load_entry(self,entry):	#Loads entries
+	def load_entry(self, entry):	#Loads entries
 		if not type(entry) is list:
 			self.entries = [entry]
 		else:
 			self.entries = entry
 
 
-	def get_summary_raw(self,limit): #generator for summary 
+	def get_summary_raw(self, limit): #generator for summary 
 		
 		for x in self.entries:
 			yield {"summary":x.summary.text}
@@ -74,12 +73,12 @@ class alert:
 				if limit == 0:
 					break
 
-	def get_summary(self,limit=None):
+	def get_summary(self, limit=None):
 		
 		limit = self.limit if limit is None else limit
 		return list(self.get_summary_raw(limit))
 
-	def get_title_raw(self,limit):            #To be moved to a generator
+	def get_title_raw(self, limit):            #To be moved to a generator
 
 		for x in self.entries:
 			yield {"title":x.title.text}
@@ -87,23 +86,23 @@ class alert:
 				if limit == 0:
 					break
 
-	def get_title(self,limit=None):
+	def get_title(self, limit=None):
 		limit = self.limit if limit is None else limit
 		return list(self.get_title_raw(limit))
 
-	def get_id_raw(self,limit):				#To be moved to a generator
+	def get_id_raw(self, limit):				#To be moved to a generator
 		for x in self.entries:
 			yield {"id":x.id.text}
 			limit = limit - 1 if limit is not None else None 
 			if type(limit) is int:
 				if limit == 0:
 					break
-	def get_id(self,limit=None):
+	def get_id(self, limit=None):
 		limit = self.limit if limit is None else limit
 		return list(self.get_id_raw(limit))
 
 
-	def get_cap_raw(self,limit):    #Generator for cap content
+	def get_cap_raw(self, limit):    #Generator for cap content
 
 		store = {}
 		for x in self.entries:
@@ -115,19 +114,13 @@ class alert:
 				if limit == 0:
 					break
 
-	def get_cap(self,limit=None):   #
+	def get_cap(self, limit=None):   #
 		limit = self.limit if limit is None else limit
 		lst = []
 		for x in self.get_cap_raw(limit):
 			lst = lst + list(x)
 		return lst
 
-
-class tools:		#Tools that may help development in terms of handeling data. 
-	def get_report():
-		pass
-	def get_all():
-		pass
 
 
 
