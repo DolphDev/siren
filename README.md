@@ -15,7 +15,9 @@ Create an alert instance.
 The Library current supports the following methods.
     
      weather.refresh()  #refreshs the page
-     weather.get_cap()  #Gets collects all of the Cap fee
-     weather.get_summary()  #gets the summary
-     weather.get_title() #gets the titles
-     weather.get_id() #Gets an alerts page.
+     weather.get_cap()  #Gets collects all of the Cap feed, and returns a list of dictionaries that contain each of the cap feed elements.
+     weather.get_summary()  #gets the summary. Returns a list of dictionaries 
+     weather.get_title() #gets the titles.  Returns a list of dictionaries 
+     weather.get_id() #Gets an alerts page. Returns a list of dictionaries 
+     
+     
