@@ -29,11 +29,13 @@ The Library current supports the following methods.
      weather.get_id() #Gets the id of an entry (the string of the id can be used for reports). Returns a list of dictionaries 
 	
 To get an report
+
      rep = NWS.toolbelt.id2report(weather.get_id[0]{"id") # 0 is the first entry, "id" is the key for the dict.
 	
 report currently supports the following
-	 rep.get_meta() #returns the meta information of the report (dict)
-	 rep.get_info() #returns the info about the report (dict)
+
+     rep.get_meta() #returns the meta information of the report (dict)
+     rep.get_info() #returns the info about the report (dict)
      
 
      
