@@ -30,7 +30,7 @@ The Library current supports the following methods.
 	
 To get an report
 
-     rep = NWS.toolbelt.id2report(weather.get_id[0]{"id") # 0 is the first entry, "id" is the key for the dict.
+     rep = NWS.toolbelt.id2report(weather.get_id()[0]["id"]) # 0 is the first entry, "id" is the key for the dict.
 	
 report currently supports the following
 
