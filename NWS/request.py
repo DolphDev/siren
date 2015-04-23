@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
+
 class report:							#Handles reports
 	def __init__(self,id_url,gdata=True):
 
@@ -39,18 +40,22 @@ class report:							#Handles reports
 
 class nws:
 
-	def __init__(self,state="usa", gdata=True):
+	def url_formatter(self):
+		return ("http://alerts.weather.gov/cap/%s.php?x=1" % (self.state))
 
+	def __init__(self,state="us", gdata=True):
+		self.state = state
+		print self.state
 		self.limit = 5
 		if gdata:
-			self.alert_raw = requests.get("http://alerts.weather.gov/cap/us.php?x=1").text
+			self.alert_raw = requests.get(self.url_formatter()).text
 			self.soup = BeautifulSoup(self.alert_raw)
 			self.entries = (self.soup.find_all("entry"))
 		self.cap = ["event", "effective","expires","status","msgtype","category","urgency","severity","areadesc","polygon","geocode"] #All the cap elements
 	
 	def refresh(self):                #Refreshes the data
 		try:
-			self.alert_raw = requests.get("http://alerts.weather.gov/cap/us.php?x=1").text
+			self.alert_raw = requests.get(self.url_formatter()).text
 			self.soup = BeautifulSoup(self.alert_raw)
 			self.entries = (self.soup.find_all("entry"))
 			return True
