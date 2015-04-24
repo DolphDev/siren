@@ -1,4 +1,4 @@
-# nws-alert V 0.0.2.1
+# nws-alert V 0.0.2.
 
 A Python library for the National Weather Service Public Alerts.
 
@@ -14,7 +14,7 @@ import the module
 
 Create  NWS.request() instance.
 
-    weather = NWS.request("us") #us is statecode. you can add a true-false to the argument to set if it should immedialetly request data on this instance (True = Get Data), False = Dont get data)
+    weather = NWS.request.nws("us") #us is statecode. you can add a true-false to the argument to set if it should immedialetly request data on this instance (True = Get Data), False = Dont get data)
 
 To get new alert date use .refresh()
 
