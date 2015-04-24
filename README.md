@@ -1,4 +1,4 @@
-# nws-alert V 0.0.2.
+# nws-alert V 0.0.2.3
 
 A Python library for the National Weather Service Public Alerts.
 
