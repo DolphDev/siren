@@ -1,4 +1,4 @@
-# nws-alert V 0.0.2.3
+# nws-alert V 0.0.2.9
 
 A Python library for the National Weather Service Public Alerts.
 
@@ -12,7 +12,7 @@ import the module
 
     import NWS
 
-Create  NWS.request() instance.
+Create  NWS.reques.nws() instance.
 
     weather = NWS.request.nws("us") #us is statecode. you can add a true-false to the argument to set if it should immedialetly request data on this instance (True = Get Data), False = Dont get data)
 
@@ -30,12 +30,12 @@ The Library current supports the following methods.
 	
 To get an report
 
-     rep = NWS.toolbelt.id2report(weather.get_id()[0]["id"]) # 0 is the first entry, "id" is the key for the dict.
-	
+     rep = NWS.toolbelt.id2report(weather.get_id()[0]["id"]) # 0 is the first entry, "id" is the key for the dict. toolbelt.report() is my optional toolset 
+	included in this library to make data easier and faster. 
+
 report currently supports the following
 
      rep.get_meta() #returns the meta information of the report (dict)
      rep.get_info() #returns the info about the report (dict)
      
 
-     
