@@ -41,7 +41,7 @@ You can also create a report instance by calling NWS.request.report(_id_) but it
 
 ### Toolbelt
 
-This library includes some extra tools for handeling data. For various reasons that are not listed, it is faster (or more reasonable) to include a toolset rather than actually having the library itself extensively handling the data. The toolbelt includes functions that would be useful in the usuage.
+This library includes some extra tools for handeling data. For various reasons that are not listed, it is faster (or more reasonable) to include a toolset rather than actually having the library itself extensively handling the data. The toolbelt includes functions that would be useful in the usage of this library.
 
 Current uses of the toolbelt.
      
