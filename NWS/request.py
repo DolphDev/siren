@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import json
 
 
 class report:							#Handles reports
@@ -45,7 +44,7 @@ class nws:
 		return ("https://alerts.weather.gov/cap/%s.atom" % (self.state))
 
 	def error_handeling(self):
-		return (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
+		self.no_warnings = (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
 
 	def __init__(self,state="us", gdata=True):
 		self.state = state
@@ -55,7 +54,8 @@ class nws:
 			self.soup = BeautifulSoup(self.alert_raw)
 			self.entries = (self.soup.find_all("entry"))
 			self.updated = self.soup.find("updated")
-		self.cap = ["event", "effective","expires","status","msgtype","category","urgency","severity","areadesc","polygon","geocode"] #All the cap elements
+		self.cap = ["event", "effective","expires","status","msgtype","category","urgency","severity","areadesc","polygon","geocode"] 
+		self.error_handeling()
 	
 	def refresh(self):                #Refreshes the data
 		try:
@@ -63,6 +63,7 @@ class nws:
 			self.soup = BeautifulSoup(self.alert_raw)
 			self.entries = (self.soup.find_all("entry"))
 			self.updated = self.soup.find("updated")
+			self.error_handeling()
 			return True
 		except:
 			return False
@@ -77,7 +78,7 @@ class nws:
 			self.entries = entry
 
 	def get_summary(self, limit=None):
-		if self.error_handeling():
+		if self.no_warnings :
 			return None
 		
 		def summary_gen(limit): #generator for summary 
@@ -94,8 +95,9 @@ class nws:
 
 
 	def get_title(self, limit=None):
-		if self.error_handeling():
+		if self.no_warnings :
 			return None
+
 		def title_gen(limit):  #Generator
 
 			for x in self.entries:
@@ -108,8 +110,9 @@ class nws:
 		return list(title_gen(limit))
 
 	def get_id(self, limit=None):
-		if self.error_handeling():
+		if self.no_warnings :
 			return None
+
 		def id_gen(limit):				#id generator
 			for x in self.entries:
 				yield {"id":x.id.text}
@@ -123,8 +126,10 @@ class nws:
 
 
 	def get_cap(self, limit=None):   #
-		if self.error_handeling():
+
+		if self.no_warnings :
 			return None
+
 		def cap_gen(limit):    #Generator for cap content
 
 			store = {}

@@ -14,4 +14,20 @@ def city2list(c):
 		raise ValueError("Arugment was "+str(type(c)))
 	return c.split("; ")
 
+def pretty_time(t):
+	pass
+
+def get_all(nws,limit=100):
+
+	def all_gen(nws,limit):
+		_cap_ = nws.get_cap()
+		_id_ = nws.get_id()
+		_title_ = nws.get_title()
+		_summary_ = nws.get_summary()
+
+		for x in xrange(0,limit if len(_cap_) > limit else len(_cap_)):
+			yield {"id":_id_[x]["id"],"title":_title_[x]["title"],"summary":_summary_[x]["summary"],"cap":_cap_[x]}
+
+	return list(all_gen(nws,limit))
+
 
