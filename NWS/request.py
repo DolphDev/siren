@@ -7,7 +7,7 @@ class report:							#Handles reports
 	def __init__(self,id_url,gdata=True):
 
 		self.id  = id_url
-		self.meta = ["identifier","sender","sent","status","msgType","scope","note"]
+		self.meta = ["identifier","sender","sent","status","scope","note"]
 		self.infolist = ["category","event","urgency","severity","certainty","effective","expires","senderName","headline","description","instruction"]
 		if gdata:
 			self.report_raw = requests.get(self.id).text
@@ -20,6 +20,7 @@ class report:							#Handles reports
 		self.info = self.soup.info
 
 	def get_meta(self):
+		
 		store = {}
 		for y in self.meta:
 			try:
@@ -40,12 +41,15 @@ class report:							#Handles reports
 
 class nws:
 
-	def url_formatter(self):
-		return ("http://alerts.weather.gov/cap/%s.php?x=0" % (self.state))
+	def url_formatter(self): #URL FORMATER
+		return ("https://alerts.weather.gov/cap/%s.atom" % (self.state))
+
+	def error_handeling(self):
+		return (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
 
 	def __init__(self,state="us", gdata=True):
 		self.state = state
-		self.limit = 5
+		self.limit = 20
 		if gdata:
 			self.alert_raw = requests.get(self.url_formatter()).text
 			self.soup = BeautifulSoup(self.alert_raw)
@@ -58,13 +62,13 @@ class nws:
 			self.alert_raw = requests.get(self.url_formatter()).text
 			self.soup = BeautifulSoup(self.alert_raw)
 			self.entries = (self.soup.find_all("entry"))
-			self.update = self.soup.find("updated").text
+			self.updated = self.soup.find("updated")
 			return True
 		except:
 			return False
 
 	def change_state(self,state):
-		self.state = state
+		self.state = state #state if state in 
 
 	def load_entry(self, entry):	#Loads entries
 		if not type(entry) is list:
@@ -73,6 +77,8 @@ class nws:
 			self.entries = entry
 
 	def get_summary(self, limit=None):
+		if self.error_handeling():
+			return None
 		
 		def summary_gen(limit): #generator for summary 
 		
@@ -84,12 +90,13 @@ class nws:
 						break
 
 		limit = self.limit if limit is None else limit
-		return list(self.summary_gen(limit))
+		return list(summary_gen(limit))
 
 
 	def get_title(self, limit=None):
-
-		def title_gen(limit):            #To be moved to a generator
+		if self.error_handeling():
+			return None
+		def title_gen(limit):  #Generator
 
 			for x in self.entries:
 				yield {"title":x.title.text}
@@ -101,7 +108,8 @@ class nws:
 		return list(title_gen(limit))
 
 	def get_id(self, limit=None):
-
+		if self.error_handeling():
+			return None
 		def id_gen(limit):				#id generator
 			for x in self.entries:
 				yield {"id":x.id.text}
@@ -115,7 +123,8 @@ class nws:
 
 
 	def get_cap(self, limit=None):   #
-
+		if self.error_handeling():
+			return None
 		def cap_gen(limit):    #Generator for cap content
 
 			store = {}

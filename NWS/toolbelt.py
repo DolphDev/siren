@@ -14,3 +14,4 @@ def city2list(c):
 		raise ValueError("Arugment was "+str(type(c)))
 	return c.split("; ")
 
+
