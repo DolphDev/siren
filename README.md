@@ -16,7 +16,7 @@ Create `NWS.request.nws()` instance.
 
     weather = NWS.request.nws("us") #us is statecode. you can add a true-false to the argument to set if it should immedialetly request data on this instance (True = Get Data), False = Dont get data)
 
-To actually get the data use `weather.loud()`
+To actually get the data use `weather.load()`
 
     weather.load() #Will return True if successful. If not it will return False.
 
