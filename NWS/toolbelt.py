@@ -10,12 +10,15 @@ def id2report(id_url,entryint=0):
 	return request.report(id_url)
 
 def city2list(c):
-	if type(c) is str:
-		raise ValueError("Arugment was "+str(type(c)))
+	if not type(c) is str:
+		raise ValueError("Argument was "+str(type(c))+" , instead of str")
 	return c.split("; ")
 
-def pretty_time(t):
-	pass
+def pretty_time(t): 
+	if not type(t) is str:
+		raise ValueError("Argument was "+str(type(t))+" instead of str")
+	time = t.split("T")
+	return {"date":time[0],"time":""}
 
 def get_all(nws,limit=100):
 

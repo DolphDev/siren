@@ -1,4 +1,4 @@
-# nws-alert V 0.0.3.01
+# nws-alert V 0.0.3.08
 
 A Python library for the National Weather Service Public Alerts. 
 
@@ -16,9 +16,9 @@ Create `NWS.request.nws()` instance.
 
     weather = NWS.request.nws("us") #us is statecode. you can add a true-false to the argument to set if it should immedialetly request data on this instance (True = Get Data), False = Dont get data)
 
-To refresh the data use `weather.refresh()`
+To actually get the data use `weather.loud()`
 
-    weather.refresh() #Will return True if successful. If not it will return False.
+    weather.load() #Will return True if successful. If not it will return False.
 
 The Library current supports the following methods.
     
@@ -27,13 +27,14 @@ The Library current supports the following methods.
      weather.get_summary() #gets the summary of an report. Returns a list of dictionaries 
      weather.get_title() #gets the titles.  Returns a list of dictionaries 
      weather.get_id() #Gets the id of an entry (the string of the id can be used for reports). Returns a list of dictionaries 
-     NWS.toolbelt.get_all(weather) #returns a merged version of the above methods
+     NWS.toolbelt.get_all(weather) #returns a merged version of the above methods. Toolbelt, see below for details
 	
-To get an report
+To get a report. 
 
      rep = NWS.toolbelt.id2report(weather.get_id()[0]["id"]) # 0 is the first entry, "id" is the key for the dict. Uses toolbelt (see below)
 report currently supports the following
 
+     rep.load() #Gets the data. must be called before the below are used.
      rep.get_meta() #returns the meta information of the report (dict)
      rep.get_info() #returns the info about the report (dict)
 
@@ -50,6 +51,6 @@ Current uses of the toolbelt.
      #but you must specify which entry to use (defualt is the first). 
      #Returns a NWS.request.report() instance of the _id_
 
-     NWS.toolbelt.city2list(city) # where city is the str. get_cap() will give you the string of affected areas, this just makes them into a list.
+     NWS.toolbelt.city2list(city) # where city is a str. get_cap() will give you the string of affected areas, this just makes them into a list.
 
      NWS.toolbelt.get_all(request) # request is a NWS.request.nws() instance. Merges NWS.request.nws() instance methods.

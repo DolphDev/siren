@@ -3,20 +3,22 @@ import requests
 
 
 class report:							#Handles reports
-	def __init__(self,id_url,gdata=True):
+	def __init__(self,id_url,onload=False):
 
 		self.id  = id_url
 		self.meta = ["identifier","sender","sent","status","scope","note"]
 		self.infolist = ["category","event","urgency","severity","certainty","effective","expires","senderName","headline","description","instruction"]
-		if gdata:
+		if onload:
+			self.load()
+
+	def load(self):
+		try:
 			self.report_raw = requests.get(self.id).text
 			self.soup = BeautifulSoup(self.report_raw)
-			self.info = self.soup.alert.info
-
-	def refresh(self):
-		self.report_raw = requests.get(self.id).text
-		self.soup = BeautifulSoup(self.report_raw)
-		self.info = self.soup.info
+			self.info = self.soup.info
+			return True
+		except:
+			return False
 
 	def get_meta(self):
 		
@@ -40,24 +42,18 @@ class report:							#Handles reports
 
 class nws:
 
-	def url_formatter(self): #URL FORMATER
-		return ("https://alerts.weather.gov/cap/%s.atom" % (self.state))
-
-	def error_handeling(self):
-		self.no_warnings = (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
-
-	def __init__(self,state="us", gdata=True):
+	def __init__(self,state="us", oneload=False):
 		self.state = state
 		self.limit = 20
-		if gdata:
-			self.alert_raw = requests.get(self.url_formatter()).text
-			self.soup = BeautifulSoup(self.alert_raw)
-			self.entries = (self.soup.find_all("entry"))
-			self.updated = self.soup.find("updated")
+		if oneload:
+			self.load()
 		self.cap = ["event", "effective","expires","status","msgtype","category","urgency","severity","areadesc","polygon","geocode"] 
-		self.error_handeling()
 	
-	def refresh(self):                #Refreshes the data
+		self.refresh = self.load  #Compatiblity
+		
+
+
+	def load(self):                #Refreshes the data
 		try:
 			self.alert_raw = requests.get(self.url_formatter()).text
 			self.soup = BeautifulSoup(self.alert_raw)
@@ -67,6 +63,13 @@ class nws:
 			return True
 		except:
 			return False
+
+
+	def url_formatter(self): #URL FORMATER
+		return ("https://alerts.weather.gov/cap/%s.atom" % (self.state))
+
+	def error_handeling(self):
+		self.no_warnings = (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
 
 	def change_state(self,state):
 		self.state = state #state if state in 
