@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
-import requests
+import noaa_get
 
 
-class report:							#Handles reports
+class report:	
+						#Handles reports
 	def __init__(self,id_url,onload=False):
 
 		self.id  = id_url
@@ -13,7 +14,7 @@ class report:							#Handles reports
 
 	def load(self):
 		try:
-			self.report_raw = requests.get(self.id).text
+			self.report_raw = noaa_get.get(self.id)
 			self.soup = BeautifulSoup(self.report_raw)
 			self.info = self.soup.info
 			return True
@@ -42,10 +43,10 @@ class report:							#Handles reports
 
 class nws:
 
-	def __init__(self,state="us", oneload=False):
+	def __init__(self,state="us", onload=False):
 		self.state = state
 		self.limit = 20
-		if oneload:
+		if onload:
 			self.load()
 		self.cap = ["event", "effective","expires","status","msgtype","category","urgency","severity","areadesc","polygon","geocode"] 
 	
@@ -55,7 +56,7 @@ class nws:
 
 	def load(self):                #Refreshes the data
 		try:
-			self.alert_raw = requests.get(self.url_formatter()).text
+			self.alert_raw = noaa_get.get(self.url_formatter())
 			self.soup = BeautifulSoup(self.alert_raw)
 			self.entries = (self.soup.find_all("entry"))
 			self.updated = self.soup.find("updated")
