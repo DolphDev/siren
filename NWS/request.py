@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import noaa_get
 
 
+
+
 class report:	
 						#Handles reports
 	def __init__(self,id_url,onload=False):
@@ -32,6 +34,7 @@ class report:
 		return store
 
 	def get_info(self):
+
 		store = {}
 		for y in self.infolist:
 			try:
@@ -44,7 +47,7 @@ class report:
 class nws:
 
 	def __init__(self,state="us", onload=False):
-		self.state = state
+		self.state = state.lower()
 		self.limit = 20
 		if onload:
 			self.load()
@@ -55,6 +58,7 @@ class nws:
 
 
 	def load(self):                #Refreshes the data
+		
 		try:
 			self.alert_raw = noaa_get.get(self.url_formatter())
 			self.soup = BeautifulSoup(self.alert_raw)
@@ -70,10 +74,10 @@ class nws:
 		return ("https://alerts.weather.gov/cap/%s.atom" % (self.state))
 
 	def error_handeling(self):
-		self.no_warnings = (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
+		self.has_warnings = not (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
 
 	def change_state(self,state):
-		self.state = state #state if state in 
+		self.state = state.lower() #
 
 	def load_entry(self, entry):	#Loads entries
 		if not type(entry) is list:
@@ -82,8 +86,6 @@ class nws:
 			self.entries = entry
 
 	def get_summary(self, limit=None):
-		if self.no_warnings :
-			return None
 		
 		def summary_gen(limit): #generator for summary 
 		
@@ -94,13 +96,15 @@ class nws:
 					if limit == 0:
 						break
 
-		limit = self.limit if limit is None else limit
-		return list(summary_gen(limit))
+		if self.has_warnings:
+			limit = self.limit if limit is None else limit
+			return list(summary_gen(limit))
+		else:
+			return None
 
 
 	def get_title(self, limit=None):
-		if self.no_warnings :
-			return None
+
 
 		def title_gen(limit):  #Generator
 
@@ -109,13 +113,13 @@ class nws:
 				if type(limit) is int:
 					if limit == 0:
 						break
-
-		limit = self.limit if limit is None else limit
-		return list(title_gen(limit))
+		if self.has_warnings:
+			limit = self.limit if limit is None else limit
+			return list(title_gen(limit))
+		else:
+			return None
 
 	def get_id(self, limit=None):
-		if self.no_warnings :
-			return None
 
 		def id_gen(limit):				#id generator
 			for x in self.entries:
@@ -124,15 +128,15 @@ class nws:
 				if type(limit) is int:
 					if limit == 0:
 						break
-			limit = self.limit if limit is None else limit
 
-		return list(id_gen(limit))
+		if self.has_warnings:
+			limit = self.limit if limit is None else limit
+			return list(id_gen(limit))
+		else:
+			return None
 
 
 	def get_cap(self, limit=None):   #
-
-		if self.no_warnings :
-			return None
 
 		def cap_gen(limit):    #Generator for cap content
 
@@ -146,11 +150,14 @@ class nws:
 					if limit == 0:
 						break
 
-		limit = self.limit if limit is None else limit
-		lst = []
-		for x in cap_gen(limit):
-			lst = lst + list(x)
-		return lst
+		if self.has_warnings:
+			limit = self.limit if limit is None else limit
+			lst = []
+			for x in cap_gen(limit):
+				lst = lst + list(x)
+			return lst
+		else:
+			return None
 
 
 

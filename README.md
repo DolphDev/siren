@@ -1,4 +1,4 @@
-# nws-alert V 0.0.3.09
+# nws-alert V 0.0.3.11
 
 A Python library for the National Weather Service Public Alerts. 
 
@@ -31,14 +31,15 @@ The Library current supports the following methods.
 	
 To get a report. 
 
-     rep = NWS.toolbelt.id2report(weather.get_id()[0]["id"]) # 0 is the first entry, "id" is the key for the dict. Uses toolbelt (see below)
+     rep = NWS.toolbelt.id2report(weather.get_id(),0) # 0 is the first entry. Uses toolbelt (see below)
+
 report currently supports the following
 
      rep.load() #Gets the data. must be called before the below are used.
      rep.get_meta() #returns the meta information of the report (dict)
      rep.get_info() #returns the info about the report (dict)
 
-You can also create a report instance by calling NWS.request.report(_id_) but its not recommended due to possible future modifications
+You can also create a report instance by calling NWS.request.report(_id_) (_id_ is str or unicode) but it's not recommended due to possible future modifications and security issues.
 
 ### Toolbelt
 
@@ -50,7 +51,9 @@ Current uses of the toolbelt.
      #It also accepts list with the said dict in it, 
      #but you must specify which entry to use (defualt is the first). 
      #Returns a NWS.request.report() instance of the _id_
+     #Automatically converts the id to https (note: urllib2 doesnt check for a valid cert)
 
      NWS.toolbelt.city2list(city) # where city is a str. get_cap() will give you the string of affected areas, this just makes them into a list.
 
      NWS.toolbelt.get_all(request) # request is a NWS.request.nws() instance. Merges NWS.request.nws() instance methods.
+     #get_all() will return an error is the nws() instance has no data yet.
