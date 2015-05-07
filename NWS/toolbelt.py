@@ -24,7 +24,7 @@ def pretty_time(t):
 	time = t.split("T")
 	return {"date":time[0],"time":""}
 
-def get_all(nws,limit=5,greport=False):
+def get_all(nws, limit=5, greport=False, only_report=False):
 
 	def all_gen(nws,limit=None):
 		limit = nws.limit if limit == None else limit+1
@@ -32,15 +32,20 @@ def get_all(nws,limit=5,greport=False):
 		_id_ = nws.get_id()
 		_title_ = nws.get_title()
 		_summary_ = nws.get_summary()
-		if greport:
+		if greport and not only_report:
 			for x in xrange(0,limit if len(_cap_) > limit else len(_cap_)):
 				report = id2report(_id_,x)
 				report.load()
 				yield {"report":{"meta":report.get_meta(),"info":report.get_info()}, "id":_id_[x]["id"],"title":_title_[x]["title"],"summary":_summary_[x]["summary"],"cap":_cap_[x]}
+		elif greport and only_report:
+				for x in xrange(0,limit if len(_cap_) > limit else len(_cap_)):
+					report = id2report(_id_,x)
+					report.load()
+				yield {"report":{"meta":report.get_meta(),"info":report.get_info()}, "id":_id_[x]["id"]}
 		else:
 			for x in xrange(0,limit if len(_cap_) > limit else len(_cap_)):
 				yield {"id":_id_[x]["id"],"title":_title_[x]["title"],"summary":_summary_[x]["summary"],"cap":_cap_[x]}
 
-	return list(all_gen(nws,limit))
+	return list(all_gen(nws, limit))
 
 

@@ -72,7 +72,7 @@ class nws:
 
 	def url_formatter(self): #URL FORMATER
 		return ("https://alerts.weather.gov/cap/%s.atom" % (self.state))
-
+ 
 	def error_handeling(self):
 		self.has_warnings = not (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
 
