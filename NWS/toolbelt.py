@@ -3,6 +3,7 @@ import request
 
 def id2report(id_url,entryint=0):
 	#takes an id and requests the report for it.\
+	entryint = entryint if bool(entryint) else 0
 	if type(id_url) is list:
 		_id_ = (id_url[entryint]["id"])
 	elif type(id_url) is dict:

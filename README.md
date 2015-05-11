@@ -1,4 +1,4 @@
-# nws-alert V 0.0.3.11
+# nws-alert V 0.0.4.06
 
 A Python library for the National Weather Service Public Alerts. 
 
@@ -57,3 +57,7 @@ Current uses of the toolbelt.
 
      NWS.toolbelt.get_all(request) # request is a NWS.request.nws() instance. Merges NWS.request.nws() instance methods.
      #get_all() will return an error is the nws() instance has no data yet.
+
+## Alert Object
+
+This module includes the object `NWS.alert()`. The Object wraps the entire module for easy use. It is currently a WIP, and somewhat slower than directly using the above methods.
