@@ -3,7 +3,6 @@ import noaa_get
 
 
 
-
 class report:	
 						#Handles reports
 	def __init__(self,id_url,onload=False):
@@ -11,6 +10,7 @@ class report:
 		self.id  = id_url
 		self.meta = ["identifier","sender","sent","status","scope","note"]
 		self.infolist = ["category","event","urgency","severity","certainty","effective","expires","senderName","headline","description","instruction"]
+		
 		if onload:
 			self.load()
 
@@ -23,6 +23,7 @@ class report:
 		except:
 			return False
 
+	#parses info not within the <info> html tag
 	def get_meta(self):
 		
 		store = {}
@@ -46,19 +47,19 @@ class report:
 
 class nws:
 
-	def __init__(self,state="us", onload=False):
-		self.state = state.lower()
+	def __init__(self,area="us", onload=False, is_loc=False):
+		self.state = area.lower() if not is_loc else area
 		self.limit = 20
-		if onload:
+		if bool(onload):
 			self.load()
 		self.cap = ["event", "effective","expires","status","msgtype","category","urgency","severity","areadesc","polygon","geocode"] 
-	
+		self.is_loc = bool(is_loc)
 		self.refresh = self.load  #Compatiblity
 		
 
 
 	def load(self):                #Refreshes the data
-		
+
 		try:
 			self.alert_raw = noaa_get.get(self.url_formatter())
 			self.soup = BeautifulSoup(self.alert_raw)
@@ -70,14 +71,18 @@ class nws:
 			return False
 
 
-	def url_formatter(self): #URL FORMATER
-		return ("https://alerts.weather.gov/cap/%s.atom" % (self.state))
- 
+	def url_formatter(self): 
+		if not self.is_loc:
+			return ("https://alerts.weather.gov/cap/{state}.atom").format(state=self.state)
+ 		else:
+ 			return ("https://alerts.weather.gov/cap/wwaatmget.php?x={zone}&y=0").format(zone=self.state)
+
 	def error_handeling(self):
 		self.has_warnings = not (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
 
-	def change_state(self,state):
-		self.state = state.lower() #
+	def change_state(self,state,is_loc):
+		self.state = state.lower()
+		self.is_loc = bool(is_loc)
 
 	def load_entry(self, entry):	#Loads entries
 		if not type(entry) is list:
@@ -102,7 +107,7 @@ class nws:
 		else:
 			return None
 
-
+	#Gets the title
 	def get_title(self, limit=None):
 
 

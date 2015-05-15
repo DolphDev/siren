@@ -12,13 +12,106 @@ import the module
 
     import NWS
 
+(NWS is the Devolpment name of this module)   
+
+
+
+# Alert Object
+
+This module includes the object `NWS.alert()`. The Object wraps the entire module for easy and more consistant use. The Alert object includes most (and soon to be all_ of the modules uses. The only real reason you wouldnt want to use is if you want somewhat unparsed data or you need data in way that this object doesn't provide very well.
+
+To the create the object
+
+    alert = NWS.alert()
+
+This also accepts keyword arguments for more advanced customization. 
+
+* `state` - Default is `"us"` (Which is the entire country). Accepts either state abbreviations or county/zone code.
+* `loc` - Default is `False`. Must be `True` if `state` is a country/zone code. Leave `False` if your using a state abbreviation.
+* `auto_load` - Default is `False`. If set to `True` the Object will load the data on its creation.
+* `limit` - Default is None. Sets a universal limit for the object. It will be used if you call a method without specifiying a limit.
+
+## Methods
+
+###Getting data
+
+You most use `alert.load()` if you did not set `auto_load` to `True` when creating the object.
+
+`alert.load()` loads the data. Returns `True` if successful and `False`
+
+### Checking data
+
+Sometimes the data will contain no alerts. The module includes one function to help with this
+
+`alert.warnings` - Returns ``True`` if request was successful. ``False`` if not
+
+### Parsing data.
+
+#### get()
+
+'alert.get()' - accepts the keyword argument `content` with an list of valid requests in it. for example, if you want `get_cap()`, `get_title()`, `get_id()`, and `get_summary()` in that exact order, simply make this call.
+
+    alert.get(content=["cap","title","id","summary"])
+
+It returns an list with the specified data where you want it (I.E `"cap"` is replaced with the result of `get_cap()`)
+
+Note: this does not support reports.
+
+#### get_title()
+
+`alert.get_title()` - accepts 1 argument, an Integer representing a limit how on much of the data you want to parse. 
+
+Example 
+
+    alert.get_title(5) # Five is the limit I have decided to use.
+Limit must be larger than 0. (If its 0 it defaults to None, which means you have **no limit**). If limit goes over the actual amount of warnings, it just returns all of the warnings. the title of the warning
+
+
+
+#### get_id()
+
+`alert.get_id()` - accepts 1 argument, an Integer representing a limit how on much of the data you want to parse. Returns the id of the warnings. Needed request the full reports
+
+Example 
+
+    alert.get_id(5) # Five is the limit I have decided to use.
+
+Limit must be larger than 0. (If its 0 it defaults to None, which means you have **no limit**). If limit goes over the actual amount of warnings, it just returns all of the warnings.
+
+
+#### get_summary()
+
+`alert.get_summary()` - accepts 1 argument, an Integer representing a limit how on much of the data you want to parse. Returns the id of the warnings. Cap fee
+
+Example 
+
+    alert.get_summary(5) # Five is the limit I have decided to use.
+
+Limit must be larger than 0. (If its 0 it defaults to None, which means you have **no limit**). If limit goes over the actual amount of warnings, it just returns all of the warnings. Returns the summaries of the warnings.
+
+
+
+#### get_cap()
+
+`alert.get_cap()` - accepts 1 argument, an Integer representing a limit how on much of the data you want to parse. Returns the id of the warnings. Cap fee
+
+Example 
+
+    alert.get_cap(5) # Five is the limit I have decided to use.
+
+Limit must be larger than 0. (If its 0 it defaults to None, which means you have **no limit**). If limit goes over the actual amount of warnings, it just returns all of the warnings. Cap returns most of the info about the warning.
+
+#Old Documentation
+
+These methods still work, but they are older and now wraped around the Alert Method. It still may be used if you want more flexible use of the data
+
 Create `NWS.request.nws()` instance.
 
-    weather = NWS.request.nws("us") #us is statecode. you can add a true-false to the argument to set if it should immedialetly request data on this instance (True = Get Data), False = Dont get data)
+    weather = NWS.request.nws("us") #us is statecode. you can add a `True`-`False` to the argument to set if it should immedialetly request data on this instance (`True` = Get Data), `False` = Dont get data)
 
 To actually get the data use `weather.load()`
 
-    weather.load() #Will return True if successful. If not it will return False.
+    weather.load() #Will return `True` if successful. If not it will return `False`.
 
 The Library current supports the following methods.
     
@@ -28,7 +121,7 @@ The Library current supports the following methods.
      weather.get_title() #gets the titles.  Returns a list of dictionaries 
      weather.get_id() #Gets the id of an entry (the string of the id can be used for reports). Returns a list of dictionaries 
      NWS.toolbelt.get_all(weather) #returns a merged version of the above methods. Toolbelt, see below for details
-	
+    
 To get a report. 
 
      rep = NWS.toolbelt.id2report(weather.get_id(),0) # 0 is the first entry. Uses toolbelt (see below)
@@ -58,6 +151,13 @@ Current uses of the toolbelt.
      NWS.toolbelt.get_all(request) # request is a NWS.request.nws() instance. Merges NWS.request.nws() instance methods.
      #get_all() will return an error is the nws() instance has no data yet.
 
-## Alert Object
+# Other Info
 
-This module includes the object `NWS.alert()`. The Object wraps the entire module for easy use. It is currently a WIP, and somewhat slower than directly using the above methods.
+## DISCLAIMER
+
+THIS LIBRARY SHOULD NOT BE USED TO ACTIVATE (OR EVEN WORK WITH) AMY KIND OF PRIVATE EMERGENCY SYSTEM/ALARM. IT WAS NEVER INTENDED TO BE USED AS SUCH. THIS LIBRARY SHOULD ONLY BE USED AS (INCLUDING, BUT NOT LIMITED TO) AN RESPONSIBLE NOTIFICATION SERVICE OR PERSONAL USE. THIS AUTHOR HEAVILY RECOMMENDS THAT IF THIS MODULE IS USED WITH ANY SORT OF EMERGENCY SYSTEMS (DESPITE OUR WARNING NOT TO), THAT IT HAVE SOME SORT OF CONFIRMATION SYSTEM WITH HUMAN INTERVENTION).
+
+## Resources
+
+Rules and Regulations - http://www.ecfr.gov/cgi-bin/text-idx?rgn=div5;node=47%3A1.0.1.1.12#se47.1.11_153
+
