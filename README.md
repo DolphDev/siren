@@ -1,4 +1,4 @@
-# nws-alert V 0.0.4.06
+# nws-alert V 0.0.4.77
 
 A Python library for the National Weather Service Public Alerts. 
 
@@ -59,12 +59,11 @@ Note: this does not support reports.
 
 #### get_title()
 
-`alert.get_title()` - accepts 1 argument, an Integer representing a limit how on much of the data you want to parse. 
+`alert.get_title(5)` - accepts 1 argument, an Integer representing a limit how on much of the data you want to parse. 
 
 Example 
 
-    alert.get_title(5) # Five is the limit I have decided to use.
-Limit must be larger than 0. (If its 0 it defaults to None, which means you have **no limit**). If limit goes over the actual amount of warnings, it just returns all of the warnings. the title of the warning
+`alert.get_title(5)` -  the title of the warning
 
 
 
@@ -87,23 +86,29 @@ Example
 
     alert.get_summary(5) # Five is the limit I have decided to use.
 
-Limit must be larger than 0. (If its 0 it defaults to None, which means you have **no limit**). If limit goes over the actual amount of warnings, it just returns all of the warnings. Returns the summaries of the warnings.
+Returns the summaries of the warnings.
 
 
 
 #### get_cap()
 
-`alert.get_cap()` - accepts 1 argument, an Integer representing a limit how on much of the data you want to parse. Returns the id of the warnings. Cap fee
+`alert.get_cap(5)` - accepts 1 argument, an Integer representing a limit how on much of the data you want to parse. Returns the id of the warnings. Cap fee
 
 Example 
 
     alert.get_cap(5) # Five is the limit I have decided to use.
 
-Limit must be larger than 0. (If its 0 it defaults to None, which means you have **no limit**). If limit goes over the actual amount of warnings, it just returns all of the warnings. Cap returns most of the info about the warning.
+Cap returns most of the data about the warning. 
+
+###### Note:
+
+5 is arbitrary example. It can be any int above 0.
+
+
 
 #Old Documentation
 
-These methods still work, but they are older and now wraped around the Alert Method. It still may be used if you want more flexible use of the data
+These methods still work, but they are older and now wraped around the Alert Method. they still may be used if you want more flexible use of the data
 
 Create `NWS.request.nws()` instance.
 
@@ -155,9 +160,8 @@ Current uses of the toolbelt.
 
 ## DISCLAIMER
 
-THIS LIBRARY SHOULD NOT BE USED TO ACTIVATE (OR EVEN WORK WITH) AMY KIND OF PRIVATE EMERGENCY SYSTEM/ALARM. IT WAS NEVER INTENDED TO BE USED AS SUCH. THIS LIBRARY SHOULD ONLY BE USED AS (INCLUDING, BUT NOT LIMITED TO) AN RESPONSIBLE NOTIFICATION SERVICE OR PERSONAL USE. THIS AUTHOR HEAVILY RECOMMENDS THAT IF THIS MODULE IS USED WITH ANY SORT OF EMERGENCY SYSTEMS (DESPITE OUR WARNING NOT TO), THAT IT HAVE SOME SORT OF CONFIRMATION SYSTEM WITH HUMAN INTERVENTION).
+THIS LIBRARY SHOULD NOT BE USED TO ACTIVATE (OR EVEN WORK WITH) ANY KIND OF PRIVATE EMERGENCY SYSTEM/ALARM. IT WAS NEVER INTENDED TO BE USED AS SUCH. THIS LIBRARY SHOULD ONLY BE USED AS (INCLUDING, BUT NOT LIMITED TO) AN RESPONSIBLE NOTIFICATION SERVICE OR PERSONAL USE.
 
 ## Resources
 
 Rules and Regulations - http://www.ecfr.gov/cgi-bin/text-idx?rgn=div5;node=47%3A1.0.1.1.12#se47.1.11_153
-
