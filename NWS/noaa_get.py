@@ -2,7 +2,7 @@ import urllib2
 
 #Handles all fetching of data.
 
-#Gets data, currently returns the CAP (Basically XML from the server)
+#Gets data, currently returns the CAP feed (Basically XML from the alert.)
 
 def get(url):
 	response = urllib2.urlopen(url)

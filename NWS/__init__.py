@@ -8,9 +8,9 @@ class alert(object):
 
 	def __init__(self, **kwargs):
 		#Sets up the arguments for the object
-		self.args = self.arg_loader(kwargs)
+		self.arg_loader(kwargs)
 		
-		#Creates a request instance with our arguments supplied
+		#Creates a request instance.
 		self.request_obj = request.nws(self.state, self.auto_load, self.loc)
 
 		# Match up this object's limit with out request instances limit
@@ -18,8 +18,7 @@ class alert(object):
 
 		if self.auto_load:
 			self.load()
-
-		#
+		
 
 	#Sets up the arguments for the object. Can be called independently.
 	def arg_loader(self, args):
@@ -30,17 +29,30 @@ class alert(object):
 		#Determines the state
 		self.state = ("us") if not bool(args.get("state")) else args.get("state") #default is "us"
 		
-		#The limit on how much of the result should be processed
+		#Sets limit on how much of the result should be processed. Default is None
 		self.limit = (None) if not bool(args.get("limit")) else args.get("limit") #default is 20
 
-		#If the area supplied is not a state, rather area code, this is set to True.
+		#If this is zone/county id rather than a state, this must be set to true.
 		self.loc = (False) if not bool(args.get("loc")) else True
 
-	#Tells our object to get the data.
+	#requests the data for our object
 	def load(self):
+		#For simple cache system.
+		self.cap = None 
+		self.summary = None
+		self.title = None
+		self.id = None
 		return self.request_obj.load()
 
-	#Changes area
+	def parse(self,limit=None): #If called, it will parse the entire feed.
+		limit = self.decide_limit(limit)
+		self.get_cap(limit)
+		self.get_summary(limit)
+		self.get_title(limit)
+		self.get_id(limit)
+		return True
+
+	#Changes area request info
 	def change_area(self, **kwargs):
 		area = kwargs.get("area")
 		self.loc = bool(kwargs.get("is_loc"))
@@ -51,13 +63,14 @@ class alert(object):
 	def set_limit(self, limit):
 		self.request_obj.limit = limit
 
-
 	#GETS the request data.
 	def get(self,**kwargs):
+		#Dictionary for  valid content request
 		_def_ = {"cap":self.get_cap,"summary":self.get_summary,"title":self.get_title, "id":self.get_id()}
 		content = kwargs.get("content")
 		if not bool(content):
 			raise Exception("No arguments supplied")
+			
 		for x in xrange(0,len(content)):
 			try:
 				print x
@@ -65,8 +78,6 @@ class alert(object):
 			except:
 				raise Exception(str(content[x])+ " is not a valid content option")
 		return content
-
-
 
 	#START REQUEST METHODS
 
@@ -77,22 +88,43 @@ class alert(object):
 	#Get cap
 	def get_cap(self,limit=None):
 		limit = self.decide_limit(limit)
-		return self.request_obj.get_cap(limit)
+		if self.cap == None:
+			self.cap = (self.request_obj.get_cap(limit),limit)
+		elif type(self.cap) is tuple:
+			if self.cap[1] != limit:
+				self.cap = (self.request_obj.get_cap(limit),limit)
+		return self.cap[0]
 
 	#Get Summary
 	def get_summary(self,limit=None):
 		limit = self.decide_limit(limit)
-		return self.request_obj.get_summary(limit)
+		if self.summary == None:
+			self.summary = (self.request_obj.get_summary(limit),limit)
+		elif type(self.summary) is tuple:
+			if self.summary[1] != limit:
+				self.summary = (self.request_obj.get_summary(limit),limit)
+		return self.summary[0]
+
 
 	#Get Summary
 	def get_title(self,limit=None):
 		limit = self.decide_limit(limit)
-		return self.request_obj.get_title(limit)
+		if self.title == None:
+			self.title = (self.request_obj.get_title(limit),limit)
+		elif type(self.title) is tuple:
+			if self.title[1] != limit:
+				self.title = (self.request_obj.get_title(limit),limit)
+		return self.title[0]
 
-	#Get Id
+
+	#
 	def get_id(self,limit=None):
-		limit = self.decide_limit(limit)
-		return self.request_obj.get_id(limit)
+		if self.id == None:
+			self.id = (self.request_obj.get_id(limit), limit) #Creates a 
+		elif type(self.id) is tuple:
+			if self.id[1] != limit:
+				self.id = (self.request_obj.get_id(limit),limit)
+		return self.id[0]
 
 	#END Request Methods
 
@@ -120,7 +152,10 @@ class alert(object):
 		limit = self.decide_limit(kwargs.get("limit"))
 		return toolbelt.get_all(self.request_obj, limit, include_report, only_reports)
 
-	#Returns true if request returned back any warnings, false if not. (Only returns False Valid states with no current warnings, 404 errors will still raise an error)
+	#Returns True if request returned back any warnings, False if not. (Only returns False Valid states with no current warnings, 404 errors will still raise an error)
 	def warnings(self):
-		return self.request_obj.has_warnings
-		
+		try:
+			return self.request_obj.has_warnings
+		except:
+			print("Warning: Server returned 404")
+			False		
