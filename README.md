@@ -1,4 +1,4 @@
-# nws-alert V 0.0.5.23
+# nws-alert V 0.0.5.24
 
 A Python library for the National Weather Service Public Alerts. 
 
@@ -52,7 +52,7 @@ Their is two ways this module parses the data:
 
 A simple approach is to simply parse your data as you need it. Simply use the functions outlined in the Parsing Data section below.
 
-This module keeps a cache the last request for each of parsing functions. The cache is deleted or refreshed when either `alert.load` is called or the said functions are called with different parameters.
+This module keeps a cache the last request for each of parsing functions. The cache is deleted or refreshed when either `alert.load()` is called or the said functions are called with different parameters.
 
 ##### Pre-processing
 
@@ -63,7 +63,7 @@ Please note that you must use the same parameters for `alert.parse()` as you use
 
 
 
-Sometimes the data will contain no alerts. The module includes one function to help with this
+Sometimes the data will contain no alerts. The module includes one function to help with this.
 
 `alert.warnings` - Returns ``True`` if request has active alerts. ``False`` if not. **DOES NOT** check for 404, if the server returns it will raise an error.
 
@@ -138,7 +138,7 @@ Cap returns most of the data about the warning.
 
 These methods still work, but they are older and now wrapped around the Alert Method. they still may be used if you want more flexible use of the data.
 
-You can view the old documentation [here](http://github.com/Dolphman/nws-alert/OldDoc.md)
+You can view the old documentation [here](https://github.com/Dolphman/nws-alert/blob/master/OldDoc.md)
 
 
 
