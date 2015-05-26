@@ -37,7 +37,7 @@ class alert(object):
 
 	#requests the data for our object
 	def load(self):
-		#For simple cache system.
+		#empty the cache system.
 		self.cap = None 
 		self.summary = None
 		self.title = None
@@ -73,7 +73,6 @@ class alert(object):
 			
 		for x in xrange(0,len(content)):
 			try:
-				print x
 				content[x] = _def_[content[x]](self.limit)
 			except:
 				raise Exception(str(content[x])+ " is not a valid content option")
@@ -144,13 +143,13 @@ class alert(object):
 
 
 
-	#gets all. .Can optionly include reports or only reports.
+	#gets all data. Can optionly include reports or only reports.
 	def get_all(self,**kwargs):
 
 		include_report = bool(kwargs.get("reports"))
 		only_reports = bool(kwargs.get("only_reports"))
 		limit = self.decide_limit(kwargs.get("limit"))
-		return toolbelt.get_all(self.request_obj, limit, include_report, only_reports)
+		return toolbelt.get_all(self, limit, include_report, only_reports)
 
 	#Returns True if request returned back any warnings, False if not. (Only returns False Valid states with no current warnings, 404 errors will still raise an error)
 	def warnings(self):
@@ -158,4 +157,4 @@ class alert(object):
 			return self.request_obj.has_warnings
 		except:
 			print("Warning: Server returned 404")
-			False		
+			return False		
