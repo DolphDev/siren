@@ -1,6 +1,30 @@
 import request
 import toolbelt
 
+class cache(object):
+
+	def __init__(self):
+		
+		self.data = None
+		self.limit = None
+
+	def set_dat(self, data, limit):
+		self.data = data
+		self.limit = limit
+
+	def read(self, amount):
+		return (self.data[:amount])
+
+	def check(self, nLimit):
+		if bool(self.limit) and bool(nLimit):
+			return (nLimit <= self.limit)
+		else: 
+			return False
+
+	def clean_out(self):
+		self.data = None
+		self.limit = None
+
 
 #Alert Object. Made to make using this module easier.
 #Wraps around the module.
@@ -35,13 +59,19 @@ class alert(object):
 		#If this is zone/county id rather than a state, this must be set to true.
 		self.loc = (False) if not bool(args.get("loc")) else True
 
+		#Cache System
+		self.cap = cache()
+		self.summary = cache()
+		self.title = cache()
+		self.id = cache()
+
 	#requests the data for our object
 	def load(self):
 		#empty the cache system.
-		self.cap = None 
-		self.summary = None
-		self.title = None
-		self.id = None
+		self.cap.clean_out() 
+		self.summary.clean_out()
+		self.title.clean_out()
+		self.id.clean_out()
 		return self.request_obj.load()
 
 	def parse(self,limit=None): #If called, it will parse the entire feed.
@@ -87,43 +117,41 @@ class alert(object):
 	#Get cap
 	def get_cap(self,limit=None):
 		limit = self.decide_limit(limit)
-		if self.cap == None:
-			self.cap = (self.request_obj.get_cap(limit),limit)
-		elif type(self.cap) is tuple:
-			if self.cap[1] != limit:
-				self.cap = (self.request_obj.get_cap(limit),limit)
-		return self.cap[0]
+		if self.cap.check(limit):
+			return self.cap.read(limit)
+		else:
+			self.cap.set_dat(self.request_obj.get_cap(limit),limit)
+			return self.cap.read(limit)
+		
 
 	#Get Summary
 	def get_summary(self,limit=None):
 		limit = self.decide_limit(limit)
-		if self.summary == None:
-			self.summary = (self.request_obj.get_summary(limit),limit)
-		elif type(self.summary) is tuple:
-			if self.summary[1] != limit:
-				self.summary = (self.request_obj.get_summary(limit),limit)
-		return self.summary[0]
+		if self.summary.check(limit):
+			return self.summary.read(limit)
+		else:
+			self.summary.set_dat(self.request_obj.get_summary(limit),limit)
+			return self.summary.read(limit)
 
 
 	#Get Summary
 	def get_title(self,limit=None):
 		limit = self.decide_limit(limit)
-		if self.title == None:
-			self.title = (self.request_obj.get_title(limit),limit)
-		elif type(self.title) is tuple:
-			if self.title[1] != limit:
-				self.title = (self.request_obj.get_title(limit),limit)
-		return self.title[0]
+		if self.title.check(limit):
+			return self.title.read(limit)
+		else:
+			self.title.set_dat(self.request_obj.get_title(limit),limit)
+			return self.title.read(limit)
 
 
 	#
 	def get_id(self,limit=None):
-		if self.id == None:
-			self.id = (self.request_obj.get_id(limit), limit) #Creates a 
-		elif type(self.id) is tuple:
-			if self.id[1] != limit:
-				self.id = (self.request_obj.get_id(limit),limit)
-		return self.id[0]
+		limit = self.decide_limit(limit)
+		if self.id.check(limit):
+			return self.id.read(limit)
+		else:
+			self.id.set_dat(self.request_obj.get_id(limit),limit)
+			return self.id.read(limit)
 
 	#END Request Methods
 
