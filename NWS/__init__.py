@@ -18,6 +18,7 @@ class cache(object):
 			return (self.data[:amount])
 		else:
 			return self.data
+
 	def check(self, nLimit):
 		if bool(self.limit) and bool(nLimit):
 			return (nLimit <= self.limit)
@@ -33,7 +34,7 @@ class cache(object):
 
 #Alert Object. Made to make using this module easier.
 #Wraps around the module.
-class alert(object):
+class siren(object):
 
 	def __init__(self, **kwargs):
 
