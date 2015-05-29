@@ -18,13 +18,13 @@ import the module
 
 # Alert Object
 
-This module includes the object `NWS.alert()`. This object wraps around the entire module for easy and more consistent use. The a valid reason you wouldn't want to use is if you want somewhat unparsed data or you need data in way that this object doesn't provide.
+This module includes the object `NWS.alert()`. This object wraps around the entire module for easy and more consistent use. 
 
 To the create the object
 
     alert = NWS.alert()
 
-This also accepts keyword arguments for more advanced customization. 
+This also accepts keyword arguments for more advanced usage. 
 a
 * `state` - Default is `"us"` (Which is the entire country, including teritories). Accepts either state abbreviations or county/zone code.
 * `loc` - Default is `False`. Must be `True` if `state` is a country/zone code. Leave `False` if your using a state abbreviation.
@@ -46,13 +46,13 @@ You must use `alert.load()` if you did not set `auto_load` to `True` when creati
 
 ## Parsing 
 
-Their is two ways this module parses the data:
+There is two ways this module parses the data:
 
 ##### On Demand.
 
 A simple approach is to simply parse your data as you need it. Simply use the functions outlined in the Parsing Data section below.
 
-This module keeps a cache the last request for each of parsing functions. The cache is cleared when either `alert.load()` is called or the said functions are called with different larger parameters than what is in the cache.
+This module keeps a cache the last request for each of parsing functions. The cache is cleared when either `alert.load()` is called or the said functions are called with larger parameters than what is in the cache.
 
 ##### Pre-processing
 

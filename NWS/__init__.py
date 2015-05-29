@@ -1,6 +1,7 @@
 import request
 import toolbelt
 
+#This Object handles Cache
 class cache(object):
 
 	def __init__(self):
@@ -12,12 +13,16 @@ class cache(object):
 		self.data = data
 		self.limit = limit
 
-	def read(self, amount):
-		return (self.data[:amount])
-
+	def read(self, amount=None):
+		if bool(amount):
+			return (self.data[:amount])
+		else:
+			return self.data
 	def check(self, nLimit):
 		if bool(self.limit) and bool(nLimit):
 			return (nLimit <= self.limit)
+		elif nLimit == nLimit and self.data != None:
+			return True
 		else: 
 			return False
 
@@ -31,6 +36,7 @@ class cache(object):
 class alert(object):
 
 	def __init__(self, **kwargs):
+
 		#Sets up the arguments for the object
 		self.arg_loader(kwargs)
 		
@@ -96,14 +102,15 @@ class alert(object):
 	#GETS the request data.
 	def get(self,**kwargs):
 		#Dictionary for  valid content request
-		_def_ = {"cap":self.get_cap,"summary":self.get_summary,"title":self.get_title, "id":self.get_id()}
+		_func_ = {"cap":self.get_cap,"summary":self.get_summary,"title":self.get_title, "id":self.get_id()}
+		_limit_ = kwargs.get("limit")
 		content = kwargs.get("content")
 		if not bool(content):
 			raise Exception("No arguments supplied")
 			
 		for x in xrange(0,len(content)):
 			try:
-				content[x] = _def_[content[x]](self.limit)
+				content[x] = _func_[content[x]](self.limit if not bool(_limit_) else _limit_)
 			except:
 				raise Exception(str(content[x])+ " is not a valid content option")
 		return content
@@ -144,7 +151,7 @@ class alert(object):
 			return self.title.read(limit)
 
 
-	#
+	
 	def get_id(self,limit=None):
 		limit = self.decide_limit(limit)
 		if self.id.check(limit):

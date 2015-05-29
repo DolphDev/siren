@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import noaa_get
 
+# 
 
 
 class report:	
@@ -23,7 +24,7 @@ class report:
 		except:
 			return False
 
-	#parses info not within the <info> html tag
+	#parses info not within the <info> XML tag
 	def get_meta(self):
 		
 		store = {}
@@ -34,6 +35,7 @@ class report:
 				store = dict(store.items() + {y:None}.items()) 
 		return store
 
+	
 	def get_info(self):
 
 		store = {}
