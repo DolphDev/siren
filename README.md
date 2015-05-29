@@ -133,6 +133,23 @@ Cap returns most of the data about the warning.
 ###### Note: 5 is arbitrary example. It can be any int above 0.
 
 
+### Reports.
+
+The `NWS.siren()` object includes the `get_reports()` method, which handles getting the extended reports that the NWS generates. 
+
+It accepts a few keyword arguments.
+
+* `limit` - Accepts an interger representing the limit. Default is `None` (It will use the `NWS.siren()` objects limit if there is one).
+* `id` - If supplied (and valid), the method will return supplied id's report.
+* `bulk` - if `True` it will create a report instance for every warnings report. 
+
+Depending on whether `bulk` is `True` or otherwise, you will either be returned with a report instance, or a list of report instances.
+
+Report has 3 methods (rep is representing the report instance)
+
+* `rep.load()` - Requests the data. Required for use. Returns `True` if server returned valid content, `False` if otherwise.
+* `rep.get_info()` - returns most of the info about an particular report.
+* `rep.get_meta()` - returns the meta information about the report.
 
 
 
@@ -143,6 +160,10 @@ These methods still work, but they are older and now wrapped around the alert ob
 
 You can view the old documentation [here](https://github.com/Dolphman/nws-alert/blob/master/OldDoc.md)
 
+
+#Requirements
+
+This module requires the BeautifulSoup module, and only supports 2.x python (3.x support planned). 
 
 
 # Other Info
