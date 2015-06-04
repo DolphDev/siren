@@ -1,4 +1,4 @@
-# nws-alert V 0.0.6.11
+# nws-alert V 0.0.6.12
 
 A Python library for the National Weather Service Public Alerts. 
 
@@ -62,7 +62,7 @@ That the cache system will re-parse if the argument supplied is greater than wha
 
 ##### On-Demand or Pre-Processing?
 
-This isn't this authors decision, but  is instead is up to the developer using it. That said On-Demand should be used when you don't need all of the data parsed or in circumstances where you want to limit amount of the data parsed. If you plan on using all of the data (especially if you want all data parsed), it may be better to Pre-process it.
+This isn't this authors decision, but  is instead is up to the developer using it. That said On-Demand should be used when you don't need all of the data parsed or in circumstances where you want to limit amount of the data parsed. If you plan on using all of the data (especially if you want all current warnings parsed), it may be better to pre-process it.
 
 Speed wise, their is no perceived difference that has been discovered during development. (As in if you use all the parsing methods for on-demand use, it will be the same speed of pre-processing it.)
 
@@ -73,65 +73,19 @@ Occasionally the data will contain no alerts. The module includes one function t
 
 
 
-
 ### Parsing data.
 
 
 
+|   Method Name   | Example             | Result                                                                                    |
+|:---------------:|---------------------|-------------------------------------------------------------------------------------------|
+| `parse()`       | `alert.parse()`     | Preprocess the CAP/XML data. Caches the result                                            |
+| `get_cap()`     | `alert.get_cap()`   | Processes/Loads from cache the CAP data for the active warning(s). Returns the CAP feeds. |
+| `get_summary()` | `alert.get_summary` | Processes/Loads from cache the summaries for the active warning(s). Returns the summaries |
+| `get_title()`   | `alert.get_title()` | Processes/Loads from cache the title(s) of the active warning(s). Returns the titles      |
+| `get_id()`      | `alert.get_title()` | Processes/Loads from cache the id(s) of the active warning(s). Returns the ids            |
 
-#### get()
-
-'alert.get()' - accepts the keyword argument `content` with an list of valid requests in it. for example, if you want `get_cap()`, `get_title()`, `get_id()`, and `get_summary()` in that exact order, simply make this call. Also accepts `limit` as an keyword argument, which simply sets the limit for how much it parses.
- 
-    alert.get(content=["cap","title","id","summary"])
-
-It returns an list with the specified data where you want it (I.E `"cap"` is replaced with the result of `get_cap()`)
-
-Note: this does not support reports.
-
-#### get_title()
-
-`alert.get_title(5)` - accepts 1 optional argument, an Integer representing a limit how on much of the data you want to parse. 
-
-Example 
-
-`alert.get_title(5)` -  the title of the warning
-
-
-
-#### get_id()
-
-`alert.get_id()` - accepts 1 optional argument, an Integer representing a limit how on much of the data you want to parse. Returns the id of the warnings. Needed request the full reports
-
-Example 
-
-    alert.get_id(5) # Five is the limit I have decided to use.
-
-Limit must be larger than 0. (If its `0` it defaults to `None`, which means you have **no limit**). If limit goes over the actual amount of warnings, it just returns all of the warnings.
-
-
-#### get_summary()
-
-`alert.get_summary()` - accepts 1 optional argument, an integer representing a limit how on much of the data you want to parse. Summary is a generated message (by NWS) that summarizes the report.
-
-Example 
-
-    alert.get_summary(5) #
-
-
-
-#### get_cap()
-
-`alert.get_cap(5)` - accepts 1 optional argument, an integer representing a limit how on much of the data you want to parse. Returns the id (basically the URL location) of the report.
-
-Example 
-
-    alert.get_cap(5) 
-
-Cap returns most of the data about the warning. 
-
-###### Note: 5 is arbitrary example. It can be any int above 0.
-
+All methods accept one arg, an interger representing a limit on how much you want to parse.
 
 ### Reports.
 
@@ -143,7 +97,7 @@ It accepts a few keyword arguments.
 * `id` - If supplied (and valid), the method will return supplied id's report.
 * `bulk` - if `True` it will create a report instance for every warnings report. 
 
-Depending on whether `bulk` is `True` or otherwise, you will either be returned with a report instance, or a list of report instances.
+Depending on whether `bulk` is `True` or otherwise you will either be returned with a report instance (`Bulk` is `False`), or a list of report instances (`Bulk` is `True`).
 
 Report has 3 methods (rep is representing the report instance)
 

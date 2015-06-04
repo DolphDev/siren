@@ -1,8 +1,10 @@
 from bs4 import BeautifulSoup
 import noaa_get
 
-# 
 
+#This Code needs a clean up
+#Pep 8 Fixes needed
+#Generators within functions.
 
 class report:	
 						#Handles reports
@@ -80,9 +82,9 @@ class nws:
  			return ("https://alerts.weather.gov/cap/wwaatmget.php?x={zone}&y=0").format(zone=self.state)
 
 	def error_handeling(self):
-		self.has_warnings = not (self.entries)[0].title.text == "There are no active watches, warnings or advisories"
+		self.has_warnings = (not (self.entries)[0].title.text == "There are no active watches, warnings or advisories")
 
-	def change_state(self,state,is_loc):
+	def change_state(self,state, is_loc):
 		self.state = state.lower()
 		self.is_loc = bool(is_loc)
 
@@ -95,7 +97,6 @@ class nws:
 	def get_summary(self, limit=None):
 		
 		def summary_gen(limit): #generator for summary 
-		
 			for x in self.entries:
 				yield {"summary":x.summary.text}
 				limit = limit - 1 if limit is not None else None 
@@ -114,7 +115,6 @@ class nws:
 
 
 		def title_gen(limit):  #Generator
-
 			for x in self.entries:
 				yield {"title":x.title.text}
 				if type(limit) is int:
@@ -143,7 +143,7 @@ class nws:
 			return None
 
 
-	def get_cap(self, limit=None):   #
+	def get_cap(self, limit=None):   
 
 		def cap_gen(limit):    #Generator for cap content
 

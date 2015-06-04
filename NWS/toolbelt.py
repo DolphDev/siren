@@ -1,7 +1,7 @@
 import request
 
 
-def id2report(id_url,entryint=0):
+def id2report(id_url, entryint=0):
 	#takes an id and requests the report for it.\
 	entryint = entryint if bool(entryint) else 0
 	if type(id_url) is list:
@@ -27,7 +27,7 @@ def pretty_time(t):
 
 def get_all(nws, limit=5, greport=False, only_report=False):
 	#Generator
-	def all_gen(nws,greport,only_report, limit=1):
+	def all_gen(nws, greport, only_report, limit=1):
 		limit = limit if limit != None else (nws.limit if nws.limit != None else 25)
 		_cap_ = nws.get_cap()
 		_id_ = nws.get_id()

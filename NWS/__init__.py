@@ -8,18 +8,20 @@ class cache(object):
 		
 		self.data = None
 		self.limit = None
-
+		
 	def set_dat(self, data, limit):
+
 		self.data = data
 		self.limit = limit
 
-	def read(self, amount=None):
+	def read(self, amount=None): 
 		if bool(amount):
 			return (self.data[:amount])
 		else:
 			return self.data
 
 	def check(self, nLimit):
+		#Returns True if cache needes to be updates, false if otherwise.
 		if bool(self.limit) and bool(nLimit):
 			return (nLimit <= self.limit)
 		elif nLimit == nLimit and self.data != None:
@@ -28,6 +30,7 @@ class cache(object):
 			return False
 
 	def clean_out(self):
+		#Needed for check()
 		self.data = None
 		self.limit = None
 
@@ -121,7 +124,12 @@ class siren(object):
 	#Handles all limit handeling
 	def decide_limit(self, limit):
 		return limit if bool(limit) else self.limit
+	
+	def get_entries():
+		return self.request_obj.entries
 
+	def get_raw_xml():
+		return self.request_obj.alert_raw
 	#Get cap
 	def get_cap(self,limit=None):
 		limit = self.decide_limit(limit)
