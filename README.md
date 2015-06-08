@@ -79,6 +79,8 @@ Occasionally the data will contain no alerts. The module includes one function t
 
 |   Method Name   | Example             | Result                                                                                    |
 |:---------------:|---------------------|-------------------------------------------------------------------------------------------|
+| `get_raw_xml()` | `alert.get_raw_xml()`| Returns the raw XML                                                                      |
+| `get_entries()` | `alert.get_entries()`| returns the entries (XML that has been seperated, but not processed)                     |
 | `parse()`       | `alert.parse()`     | Preprocess the CAP/XML data. Caches the result                                            |
 | `get_cap()`     | `alert.get_cap()`   | Processes/Loads from cache the CAP data for the active warning(s). Returns the CAP feeds. |
 | `get_summary()` | `alert.get_summary` | Processes/Loads from cache the summaries for the active warning(s). Returns the summaries |

@@ -82,7 +82,7 @@ class nws:
  			return ("https://alerts.weather.gov/cap/wwaatmget.php?x={zone}&y=0").format(zone=self.state)
 
 	def error_handeling(self):
-		self.has_warnings = (not (self.entries)[0].title.text == "There are no active watches, warnings or advisories")
+		self.has_warnings = (not (self.entries)[0].title.text == "There are no active watches, warnings or advisories")  
 
 	def change_state(self,state, is_loc):
 		self.state = state.lower()
