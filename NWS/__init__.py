@@ -22,9 +22,9 @@ class cache(object):
 
 	def check(self, nLimit):
 		#Returns True if cache needes to be updates, false if otherwise.
-		if bool(self.limit) and bool(nLimit):
+		if (self.limit) and (nLimit):
 			return (nLimit <= self.limit)
-		elif nLimit == nLimit and self.data != None:
+		elif nLimit is None and not (self.data is None):
 			return True
 		else: 
 			return False
@@ -58,7 +58,7 @@ class siren(object):
 	def arg_loader(self, args):
 
 		#Auto_load, decides if this object should load data from NWS servers on creation
-		self.auto_load = args.get("state", False)
+		self.auto_load = args.get("state", False) #Default is False
 		
 		#Determines the state
 		self.state = args.get("state", "us") #default is "us"
@@ -109,12 +109,11 @@ class siren(object):
 		_func_ = {"cap":self.get_cap,"summary":self.get_summary,"title":self.get_title, "id":self.get_id()}
 		_limit_ = kwargs.get("limit")
 		content = kwargs.get("content")
-		if not bool(content):
+		if not (content):
 			raise Exception("No arguments supplied")
-			
 		for x in xrange(0,len(content)):
 			try:
-				content[x] = _func_[content[x]](self.limit if not bool(_limit_) else _limit_)
+				content[x] = _func_[content[x]](self.limit if not (_limit_) else _limit_)
 			except:
 				raise Exception(str(content[x])+ " is not a valid content option")
 		return content
@@ -123,7 +122,7 @@ class siren(object):
 
 	#Handles all limit handeling
 	def decide_limit(self, limit):
-		return limit if bool(limit) else self.limit
+		return limit if (limit) else self.limit
 	
 	def get_entries():
 		return self.request_obj.entries
@@ -131,7 +130,7 @@ class siren(object):
 	def get_raw_xml():
 		return self.request_obj.alert_raw
 	#Get cap
-	def get_cap(self,limit=None):
+	def get_cap(self,limit = None):
 		limit = self.decide_limit(limit)
 		if self.cap.check(limit):
 			return self.cap.read(limit)
@@ -149,7 +148,6 @@ class siren(object):
 			self.summary.set_dat(self.request_obj.get_summary(limit),limit)
 			return self.summary.read(limit)
 
-
 	#Get Summary
 	def get_title(self,limit=None):
 		limit = self.decide_limit(limit)
@@ -159,8 +157,6 @@ class siren(object):
 			self.title.set_dat(self.request_obj.get_title(limit),limit)
 			return self.title.read(limit)
 
-
-	
 	def get_id(self,limit=None):
 		limit = self.decide_limit(limit)
 		if self.id.check(limit):
@@ -168,14 +164,13 @@ class siren(object):
 		else:
 			self.id.set_dat(self.request_obj.get_id(limit),limit)
 			return self.id.read(limit)
-
 	#END Request Methods
 
 	#Parse reports.
 	def get_report(self, **kwargs):
 		raw_id = (kwargs.get("id"))
 		limit = (self.decide_limit(kwargs.get("limit")))
-		_id_ = raw_id if bool(raw_id) else self.request_obj.get_id(limit)
+		_id_ = raw_id if (raw_id) else self.request_obj.get_id(limit)
 		_bulk_ = bool(kwargs.get("bulk"))
 		if _bulk_:
 			def gen_report(_id_):
@@ -183,7 +178,7 @@ class siren(object):
 					yield toolbelt.id2report(x)
 			return list(gen_report(_id_))
 		else:
-			return [toolbelt.id2report(_id_)]
+			return toolbelt.id2report(_id_)
 
 
 

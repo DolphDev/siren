@@ -132,9 +132,8 @@ class nws:
 			for x in self.entries:
 				yield {"id":x.id.text}
 				limit = limit - 1 if limit is not None else None 
-				if type(limit) is int:
-					if limit == 0:
-						break
+				if type(limit) is int and limit == 0:
+					break
 
 		if self.has_warnings:
 			limit = self.limit if limit is None else limit

@@ -1,4 +1,4 @@
-import request
+import request 
 
 
 def id2report(id_url, entryint=0):
@@ -23,7 +23,7 @@ def pretty_time(t):
 	if not type(t) is str:
 		raise ValueError("Argument was "+str(type(t))+" instead of str")
 	time = t.split("T")
-	return {"date":time[0],"time":""}
+	return {"date": time[0], "time":""}
 
 def get_all(nws, limit=5, greport=False, only_report=False):
 	#Generator
