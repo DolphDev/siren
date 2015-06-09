@@ -58,16 +58,16 @@ class siren(object):
 	def arg_loader(self, args):
 
 		#Auto_load, decides if this object should load data from NWS servers on creation
-		self.auto_load = (False) if not bool(args.get("auto_load")) else bool(args.get("auto_load"))
+		self.auto_load = args.get("state", False)
 		
 		#Determines the state
-		self.state = ("us") if not bool(args.get("state")) else args.get("state") #default is "us"
+		self.state = args.get("state", "us") #default is "us"
 		
 		#Sets limit on how much of the result should be processed. Default is None
-		self.limit = (None) if not bool(args.get("limit")) else args.get("limit") #default is 20
+		self.limit = args.get("limit", None) #default is 20
 
 		#If this is zone/county id rather than a state, this must be set to true.
-		self.loc = (False) if not bool(args.get("loc")) else True
+		self.loc = args.get("loc", False)
 
 		#Cache System
 		self.cap = cache()
@@ -183,7 +183,7 @@ class siren(object):
 					yield toolbelt.id2report(x)
 			return list(gen_report(_id_))
 		else:
-			return toolbelt.id2report(_id_)
+			return [toolbelt.id2report(_id_)]
 
 
 
@@ -202,3 +202,4 @@ class siren(object):
 		except:
 			print("Warning: Server returned 404")
 			return False		
+ 
