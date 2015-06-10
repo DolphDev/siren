@@ -1,4 +1,4 @@
-# nws-alert V 0.0.6.12
+# siren V 0.0.6.12
 
 A Python library for the National Weather Service Public Alerts. 
 
@@ -10,7 +10,7 @@ A Python library for the National Weather Service Public Alerts.
 
 import the module
 
-    import NWS
+    import siren
 
 (NWS is the development name of this module)   
 
@@ -18,11 +18,11 @@ import the module
 
 # Siren Object
 
-This module includes the object `NWS.siren()`. This object wraps around the entire module for easy and more consistent use. 
+This module includes the object `siren.Siren()`. This object wraps around the entire module for easy and more consistent use. 
 
 To the create the object
 
-    alert = NWS.siren()
+    alert = siren.Siren()
 
 This also accepts keyword arguments for more advanced usage. 
 a
@@ -114,7 +114,7 @@ Report has 3 methods (rep is representing the report instance)
 
 These methods still work, but they are older and now wrapped around the alert object. they still may be used if you want more flexible use of the data.
 
-You can view the old documentation [here](https://github.com/Dolphman/nws-alert/blob/master/OldDoc.md)
+You can view the old documentation [here](https://github.com/Dolphman/siren/blob/master/OldDoc.md)
 
 
 #Requirements

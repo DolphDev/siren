@@ -2,7 +2,7 @@ import request
 import toolbelt
 
 #This Object handles Cache
-class cache(object):
+class Cache(object):
 
 	def __init__(self):
 		
@@ -37,7 +37,7 @@ class cache(object):
 
 #Alert Object. Made to make using this module easier.
 #Wraps around the module.
-class siren(object):
+class Siren(object):
 
 	def __init__(self, **kwargs):
 
@@ -70,10 +70,10 @@ class siren(object):
 		self.loc = args.get("loc", False)
 
 		#Cache System
-		self.cap = cache()
-		self.summary = cache()
-		self.title = cache()
-		self.id = cache()
+		self.cap = Cache()
+		self.summary = Cache()
+		self.title = Cache()
+		self.id = Cache()
 
 	#requests the data for our object
 	def load(self):
@@ -180,15 +180,13 @@ class siren(object):
 		else:
 			return toolbelt.id2report(_id_)
 
-
-
 	#gets all data. Can optionly include reports or only reports.
 	def get_all(self,**kwargs):
 
 		include_report = bool(kwargs.get("reports"))
 		only_reports = bool(kwargs.get("only_reports"))
 		limit = self.decide_limit(kwargs.get("limit"))
-		return toolbelt.get_all(self, limit, include_report, only_reports)
+		return toolbelt.get_all(self, limit=limit, greport=include_report, only_report=only_reports)
 
 	#Returns True if request returned back any warnings, False if not. (Only returns False Valid states with no current warnings, 404 errors will still raise an error)
 	def warnings(self):
@@ -197,4 +195,5 @@ class siren(object):
 		except:
 			print("Warning: Server returned 404")
 			return False		
+ 
  
