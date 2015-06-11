@@ -1,8 +1,8 @@
-# siren V 0.0.6.12
+# siren V 0.0.6.46
+
+[![Build Status](https://travis-ci.org/Dolphman/siren.svg)](https://travis-ci.org/Dolphman/siren)
 
 A Python library for the National Weather Service Public Alerts. 
-
-
 
 
 # Documentation
@@ -12,23 +12,19 @@ import the module
 
     import siren
 
-(NWS is the development name of this module)   
-
-
-
 # Siren Object
 
-This module includes the object `siren.Siren()`. This object wraps around the entire module for easy and more consistent use. 
+This module includes the object `siren.Siren()`. This object wraps around the entire package for easy and more consistent use. 
 
 To the create the object
 
     alert = siren.Siren()
 
 This also accepts keyword arguments for more advanced usage. 
-a
+
 * `state` - Default is `"us"` (Which is the entire country, including teritories). Accepts either state abbreviations or county/zone code.
 * `loc` - Default is `False`. Must be `True` if `state` is a country/zone code. Dont include it or leave `False` if your using a state abbreviation.
-* `auto_load` - Default is `False`. If set to `True` the object will request the data on its creation. Note - You cannot currently check if the request worked if you set this to true.
+* `auto_load` - Default is `False`. If set to `True` the object will request the data on its creation. Note - You cannot check if the request was successful if done.
 * `limit` - Default is `None`. Sets a universal limit for the object. It will be used if you call a method without specifying a limit.
 
 
@@ -71,8 +67,6 @@ Occasionally the data will contain no alerts. The module includes one function t
 
 `alert.warnings` - Returns `True` if request has active alerts. ``False`` if not. **DOES NOT check for 404**, if the server returns a 404, the program will raise an error.
 
-
-
 ### Parsing data.
 
 
@@ -87,7 +81,7 @@ Occasionally the data will contain no alerts. The module includes one function t
 | `get_title()`   | `alert.get_title()` | Processes/Loads from cache the title(s) of the active warning(s). Returns the titles      |
 | `get_id()`      | `alert.get_title()` | Processes/Loads from cache the id(s) of the active warning(s). Returns the ids            |
 
-All methods accept one arg, an interger representing a limit on how much you want to parse.
+All methods accept one optional argument, an interger representing a limit on how much you want to parse.
 
 ### Reports.
 
@@ -107,8 +101,32 @@ Report has 3 methods (rep is representing the report instance)
 * `rep.get_info()` - returns most of the info about an particular report.
 * `rep.get_meta()` - returns the meta information about the report.
 
+# More Siren object info
+
+####Before load() method
+	
+`len()` will return the current limit.
+
+######Note: If you dont have a limit, you may obtain unexpected results depending on your arguments when creating a Siren object.
+
+####After load() method
+
+`len()` will return the current limit. If the limit is `None`, it will return the amount of entries the server returns.
+
+The Siren objects data can be accessed via keys. Currently, only 4 are supported (`"cap"`,`"title"`,`"id"`, `"summary"`)
+
+Example Usage:
+
+    cap = alert["cap"]
+
+This is equivalent to calling alert.get_cap()
 
 
+
+
+
+
+The 
 
 #Old Documentation
 
@@ -116,11 +134,9 @@ These methods still work, but they are older and now wrapped around the alert ob
 
 You can view the old documentation [here](https://github.com/Dolphman/siren/blob/master/OldDoc.md)
 
-
 #Requirements
 
 This module requires the BeautifulSoup module, and only supports 2.x python (3.x support planned). 
-
 
 # Other Info
 

@@ -5,11 +5,11 @@ import noaa_get
 
 #This Code needs a clean up
 #Pep 8 Fixes needed
-#Generators within functions.
+
 
 class report:	
 						#Handles reports
-	def __init__(self,id_url,onload=False):
+	def __init__(self, id_url, onload=False):
 
 		self.id  = id_url
 		self.meta = ["identifier","sender","sent","status","scope","note"]
@@ -52,7 +52,7 @@ class report:
 
 class nws:
 
-	def __init__(self,area="us", onload=False, is_loc=False):
+	def __init__(self, area="us", onload=False, is_loc=False):
 		self.state = area.lower() if not is_loc else area
 		self.limit = 20
 		if bool(onload):
@@ -95,72 +95,66 @@ class nws:
 		else:
 			self.entries = entry
 
-	def get_summary(self, limit=None):
-		
-		def summary_gen(limit): #generator for summary 
-			for x in self.entries:
-				yield {"summary":x.summary.text}
-				limit = limit - 1 if limit is not None else None 
-				if type(limit) is int:
-					if limit == 0:
-						break
+	def summary_gen(limit): #generator for summary 
+		for x in self.entries:
+			yield {"summary":x.summary.text}
+			limit = limit - 1 if limit is not None else None 
+			if type(limit) is int:
+				if limit == 0:
+					break
 
+	def get_summary(self, limit=None):
 		if self.has_warnings:
 			limit = self.limit if limit is None else limit
 			return list(summary_gen(limit))
 		else:
 			return None
 
+	def title_gen(self, limit):  #Generator
+		for x in self.entries:
+			yield {"title":x.title.text}
+			if type(limit) is int:
+				if limit == 0:
+					break
 	#Gets the title
 	def get_title(self, limit=None):
-
-
-		def title_gen(limit):  #Generator
-			for x in self.entries:
-				yield {"title":x.title.text}
-				if type(limit) is int:
-					if limit == 0:
-						break
 		if self.has_warnings:
 			limit = self.limit if limit is None else limit
-			return list(title_gen(limit))
+			return list(self.title_gen(limit))
 		else:
 			return None
+
+
+	def id_gen(self, limit):				#id generator
+		for x in self.entries:
+			yield {"id":x.id.text}
+			limit = limit - 1 if limit is not None else None 
+			if type(limit) is int and limit == 0:
+				break
 
 	def get_id(self, limit=None):
-
-		def id_gen(limit):				#id generator
-			for x in self.entries:
-				yield {"id":x.id.text}
-				limit = limit - 1 if limit is not None else None 
-				if type(limit) is int and limit == 0:
-					break
-
 		if self.has_warnings:
 			limit = self.limit if limit is None else limit
-			return list(id_gen(limit))
+			return list(self./id_gen(limit))
 		else:
 			return None
 
+	def cap_gen(self, limit):    #Generator for cap content
+		store = {}
+		for x in self.entries:
+			for y in self.cap:
+				store = dict(store.items() + {y:x.find("cap:"+y).text}.items()) 
+			yield([store])
+			limit = limit - 1 if limit is not None else None 
+			if type(limit) is int:
+				if limit == 0:
+					break
 
 	def get_cap(self, limit=None):   
-
-		def cap_gen(limit):    #Generator for cap content
-
-			store = {}
-			for x in self.entries:
-				for y in self.cap:
-					store = dict(store.items() + {y:x.find("cap:"+y).text}.items()) 
-				yield([store])
-				limit = limit - 1 if limit is not None else None 
-				if type(limit) is int:
-					if limit == 0:
-						break
-
 		if self.has_warnings:
 			limit = self.limit if limit is None else limit
 			lst = []
-			for x in cap_gen(limit):
+			for x in self.cap_gen(limit):
 				lst = lst + list(x)
 			return lst
 		else:

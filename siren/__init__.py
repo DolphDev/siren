@@ -7,12 +7,12 @@ class Cache(object):
 	def __init__(self):
 		
 		self.data = None
-		self.limit = None
-		
+		self._limit = None
+
 	def set_dat(self, data, limit):
 
 		self.data = data
-		self.limit = limit
+		self._limit = limit
 
 	def read(self, amount=None): 
 		if bool(amount):
@@ -21,9 +21,9 @@ class Cache(object):
 			return self.data
 
 	def check(self, nLimit):
-		#Returns True if cache needes to be updates, false if otherwise.
-		if (self.limit) and (nLimit):
-			return (nLimit <= self.limit)
+		#Returns True if cache needes to be updated, false if otherwise.
+		if (self._limit) and (nLimit):
+			return (nLimit <= self._limit)
 		elif nLimit is None and not (self.data is None):
 			return True
 		else: 
@@ -32,8 +32,7 @@ class Cache(object):
 	def clean_out(self):
 		#Needed for check()
 		self.data = None
-		self.limit = None
-
+		self._limit = None
 
 #Alert Object. Made to make using this module easier.
 #Wraps around the module.
@@ -47,13 +46,39 @@ class Siren(object):
 		#Creates a request instance.
 		self.request_obj = request.nws(self.state, self.auto_load, self.loc)
 
-		# Match up this object's limit with out request instances limit
-		self.set_limit(self.limit) 
+		#Sets limit on how much of the result should be processed. Needs request_obj to work
+		self._limit = kwargs.get("limit", None) #default is 20
 
 		if self.auto_load:
 			self.load()
-		
 
+	def __getitem__(self, name):
+		if name is "cap":
+			return self.get_cap()
+		elif name is  "id":
+			return self.get_id()
+		elif name is "summary":
+			return self.get_id()
+		elif name is "title":
+			return self.get_summary()
+		else:
+			if type(name) is str:
+				raise KeyError("'{}'".format(name))
+
+	#Implent len() for Siren object
+	def __len__(self):
+		return self._limit if self._limit else len(self.get_entries())
+
+	@property
+	def limit(self):
+		return self.request_obj.limit
+
+	#Handles changes to limit
+	@limit.setter
+	def limit(self, limit):
+		self._limit = limit if (limit or limit is None) else self.request_obj.limit
+
+		
 	#Sets up the arguments for the object. Can be called independently.
 	def arg_loader(self, args):
 
@@ -62,9 +87,6 @@ class Siren(object):
 		
 		#Determines the state
 		self.state = args.get("state", "us") #default is "us"
-		
-		#Sets limit on how much of the result should be processed. Default is None
-		self.limit = args.get("limit", None) #default is 20
 
 		#If this is zone/county id rather than a state, this must be set to true.
 		self.loc = args.get("loc", False)
@@ -99,35 +121,13 @@ class Siren(object):
 		onload = kwargs.get("onload")
 		self.request_obj.change_state(loc)
 
-	#Alllows you to set the limit
-	def set_limit(self, limit):
-		self.request_obj.limit = limit
-
-	#GETS the request data.
-	def get(self,**kwargs):
-		#Dictionary for  valid content request
-		_func_ = {"cap":self.get_cap,"summary":self.get_summary,"title":self.get_title, "id":self.get_id()}
-		_limit_ = kwargs.get("limit")
-		content = kwargs.get("content")
-		if not (content):
-			raise Exception("No arguments supplied")
-		for x in xrange(0,len(content)):
-			try:
-				content[x] = _func_[content[x]](self.limit if not (_limit_) else _limit_)
-			except:
-				raise Exception(str(content[x])+ " is not a valid content option")
-		return content
-
-	#START REQUEST METHODS
-
-	#Handles all limit handeling
-	def decide_limit(self, limit):
-		return limit if (limit) else self.limit
+	def decide_limit(self, _limit_):
+		return _limit_ if _limit_ else self._limit
 	
-	def get_entries():
+	def get_entries(self):
 		return self.request_obj.entries
 
-	def get_raw_xml():
+	def get_raw_xml(self):
 		return self.request_obj.alert_raw
 	#Get cap
 	def get_cap(self,limit = None):
@@ -194,6 +194,4 @@ class Siren(object):
 			return self.request_obj.has_warnings
 		except:
 			print("Warning: Server returned 404")
-			return False		
- 
- 
+			return False
