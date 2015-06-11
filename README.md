@@ -1,7 +1,5 @@
 # siren V 0.0.6.46
 
-[![Build Status](https://travis-ci.org/Dolphman/siren.svg)](https://travis-ci.org/Dolphman/siren)
-
 A Python library for the National Weather Service Public Alerts. 
 
 
