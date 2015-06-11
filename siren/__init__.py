@@ -79,7 +79,7 @@ class Siren(object):
 		self._limit = limit if (limit or limit is None) else self.request_obj.limit
 
 		
-	#Sets up the arguments for the object. Can be called independently.
+	#Sets up the arguments for the object.
 	def arg_loader(self, args):
 
 		#Auto_load, decides if this object should load data from NWS servers on creation
@@ -114,8 +114,8 @@ class Siren(object):
 		self.get_id(limit)
 		return True
 
-	#Changes area request info
-	def change_area(self, **kwargs):
+
+	def change_area(self, **kwargs): #Changes area request info
 		area = kwargs.get("area")
 		self.loc = bool(kwargs.get("is_loc"))
 		onload = kwargs.get("onload")
@@ -129,7 +129,7 @@ class Siren(object):
 
 	def get_raw_xml(self):
 		return self.request_obj.alert_raw
-	#Get cap
+	
 	def get_cap(self,limit = None):
 		limit = self.decide_limit(limit)
 		if self.cap.check(limit):
@@ -137,9 +137,7 @@ class Siren(object):
 		else:
 			self.cap.set_dat(self.request_obj.get_cap(limit),limit)
 			return self.cap.read(limit)
-		
 
-	#Get Summary
 	def get_summary(self,limit=None):
 		limit = self.decide_limit(limit)
 		if self.summary.check(limit):
@@ -148,7 +146,6 @@ class Siren(object):
 			self.summary.set_dat(self.request_obj.get_summary(limit),limit)
 			return self.summary.read(limit)
 
-	#Get Summary
 	def get_title(self,limit=None):
 		limit = self.decide_limit(limit)
 		if self.title.check(limit):
@@ -157,7 +154,7 @@ class Siren(object):
 			self.title.set_dat(self.request_obj.get_title(limit),limit)
 			return self.title.read(limit)
 
-	def get_id(self,limit=None):
+	def get_id(self,l imit=None):
 		limit = self.decide_limit(limit)
 		if self.id.check(limit):
 			return self.id.read(limit)
@@ -165,8 +162,6 @@ class Siren(object):
 			self.id.set_dat(self.request_obj.get_id(limit),limit)
 			return self.id.read(limit)
 	#END Request Methods
-
-	#Parse reports.
 	def get_report(self, **kwargs):
 		raw_id = (kwargs.get("id"))
 		limit = (self.decide_limit(kwargs.get("limit")))
@@ -179,15 +174,12 @@ class Siren(object):
 			return list(gen_report(_id_))
 		else:
 			return toolbelt.id2report(_id_)
-
 	#gets all data. Can optionly include reports or only reports.
-	def get_all(self,**kwargs):
-
+	def get_all(self, **kwargs):
 		include_report = bool(kwargs.get("reports"))
 		only_reports = bool(kwargs.get("only_reports"))
 		limit = self.decide_limit(kwargs.get("limit"))
 		return toolbelt.get_all(self, limit=limit, greport=include_report, only_report=only_reports)
-
 	#Returns True if request returned back any warnings, False if not. (Only returns False Valid states with no current warnings, 404 errors will still raise an error)
 	def warnings(self):
 		try:

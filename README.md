@@ -1,4 +1,4 @@
-# siren V 0.0.6.46
+# siren V 0.1.0.0
 
 A Python library for the National Weather Service Public Alerts. 
 

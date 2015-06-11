@@ -2,11 +2,6 @@ from bs4 import BeautifulSoup
 import noaa_get
 
 
-
-#This Code needs a clean up
-#Pep 8 Fixes needed
-
-
 class report:	
 						#Handles reports
 	def __init__(self, id_url, onload=False):
@@ -60,8 +55,6 @@ class nws:
 		self.cap = ["event", "effective","expires","status","msgtype","category","urgency","severity","areadesc","polygon","geocode"] 
 		self.is_loc = bool(is_loc)
 		self.refresh = self.load  #Compatiblity
-		
-
 
 	def load(self):                #Refreshes the data
 
@@ -74,7 +67,6 @@ class nws:
 			return True
 		except:
 			return False
-
 
 	def url_formatter(self): 
 		if not self.is_loc:
