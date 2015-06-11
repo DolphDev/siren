@@ -138,7 +138,7 @@ class Siren(object):
 			self.cap.set_dat(self.request_obj.get_cap(limit),limit)
 			return self.cap.read(limit)
 
-	def get_summary(self,limit=None):
+	def get_summary(self, limit=None):
 		limit = self.decide_limit(limit)
 		if self.summary.check(limit):
 			return self.summary.read(limit)
@@ -154,7 +154,7 @@ class Siren(object):
 			self.title.set_dat(self.request_obj.get_title(limit),limit)
 			return self.title.read(limit)
 
-	def get_id(self,l imit=None):
+	def get_id(self, limit=None):
 		limit = self.decide_limit(limit)
 		if self.id.check(limit):
 			return self.id.read(limit)

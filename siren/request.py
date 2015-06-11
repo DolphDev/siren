@@ -87,7 +87,7 @@ class nws:
 		else:
 			self.entries = entry
 
-	def summary_gen(limit): #generator for summary 
+	def summary_gen(self, limit): #generator for summary 
 		for x in self.entries:
 			yield {"summary":x.summary.text}
 			limit = limit - 1 if limit is not None else None 
@@ -98,7 +98,7 @@ class nws:
 	def get_summary(self, limit=None):
 		if self.has_warnings:
 			limit = self.limit if limit is None else limit
-			return list(summary_gen(limit))
+			return list(self.summary_gen(limit))
 		else:
 			return None
 
@@ -127,7 +127,7 @@ class nws:
 	def get_id(self, limit=None):
 		if self.has_warnings:
 			limit = self.limit if limit is None else limit
-			return list(self./id_gen(limit))
+			return list(self.id_gen(limit))
 		else:
 			return None
 
