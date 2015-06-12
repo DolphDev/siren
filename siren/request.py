@@ -12,7 +12,7 @@ class report:
 		
 		if onload:
 			self.load()
-
+			
 	def load(self):
 		try:
 			self.report_raw = noaa_get.get(self.id)

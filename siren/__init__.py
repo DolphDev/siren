@@ -4,186 +4,186 @@ import toolbelt
 #This Object handles Cache
 class Cache(object):
 
-	def __init__(self):
-		
-		self.data = None
-		self._limit = None
+    def __init__(self):
+        
+        self.data = None
+        self._limit = None
 
-	def set_dat(self, data, limit):
+    def set_dat(self, data, limit):
 
-		self.data = data
-		self._limit = limit
+        self.data = data
+        self._limit = limit
 
-	def read(self, amount=None): 
-		if bool(amount):
-			return (self.data[:amount])
-		else:
-			return self.data
+    def read(self, amount=None): 
+        if bool(amount):
+            return (self.data[:amount])
+        else:
+            return self.data
 
-	def check(self, nLimit):
-		#Returns True if cache needes to be updated, false if otherwise.
-		if (self._limit) and (nLimit):
-			return (nLimit <= self._limit)
-		elif nLimit is None and not (self.data is None):
-			return True
-		else: 
-			return False
+    def check(self, nLimit):
+        #Returns True if cache needes to be updated, false if otherwise.
+        if (self._limit) and (nLimit):
+            return (nLimit <= self._limit)
+        elif nLimit is None and not (self.data is None):
+            return True
+        else: 
+            return False
 
-	def clean_out(self):
-		#Needed for check()
-		self.data = None
-		self._limit = None
+    def clean_out(self):
+        #Needed for check()
+        self.data = None
+        self._limit = None
 
 #Alert Object. Made to make using this module easier.
 #Wraps around the module.
 class Siren(object):
 
-	def __init__(self, **kwargs):
+    def __init__(self, **kwargs):
 
-		#Sets up the arguments for the object
-		self.arg_loader(kwargs)
-		
-		#Creates a request instance.
-		self.request_obj = request.nws(self.state, self.auto_load, self.loc)
+        #Sets up the arguments for the object
+        self.arg_loader(kwargs)
+        
+        #Creates a request instance.
+        self.request_obj = request.nws(self.state, self.auto_load, self.loc)
 
-		#Sets limit on how much of the result should be processed. Needs request_obj to work
-		self._limit = kwargs.get("limit", None) #default is 20
+        #Sets limit on how much of the result should be processed. Needs request_obj to work
+        self._limit = kwargs.get("limit", None) #default is 20
 
-		if self.auto_load:
-			self.load()
+        if self.auto_load:
+            self.load()
 
-	def __getitem__(self, name):
-		if name is "cap":
-			return self.get_cap()
-		elif name is  "id":
-			return self.get_id()
-		elif name is "summary":
-			return self.get_id()
-		elif name is "title":
-			return self.get_summary()
-		else:
-			if type(name) is str:
-				raise KeyError("'{}'".format(name))
+    def __getitem__(self, name):
+        if name is "cap":
+            return self.get_cap()
+        elif name is  "id":
+            return self.get_id()
+        elif name is "summary":
+            return self.get_id()
+        elif name is "title":
+            return self.get_summary()
+        else:
+            if type(name) is str:
+                raise KeyError("'{}'".format(name))
 
-	#Implent len() for Siren object
-	def __len__(self):
-		return self._limit if self._limit else len(self.get_entries())
+    #Implent len() for Siren object
+    def __len__(self):
+        return self._limit if self._limit else len(self.get_entries())
 
-	@property
-	def limit(self):
-		return self.request_obj.limit
+    @property
+    def limit(self):
+        return self.request_obj.limit
 
-	#Handles changes to limit
-	@limit.setter
-	def limit(self, limit):
-		self._limit = limit if (limit or limit is None) else self.request_obj.limit
+    #Handles changes to limit
+    @limit.setter
+    def limit(self, limit):
+        self._limit = limit if (limit or limit is None) else self.request_obj.limit
 
-		
-	#Sets up the arguments for the object.
-	def arg_loader(self, args):
+        
+    #Sets up the arguments for the object.
+    def arg_loader(self, args):
 
-		#Auto_load, decides if this object should load data from NWS servers on creation
-		self.auto_load = args.get("state", False) #Default is False
-		
-		#Determines the state
-		self.state = args.get("state", "us") #default is "us"
+        #Auto_load, decides if this object should load data from NWS servers on creation
+        self.auto_load = args.get("state", False) #Default is False
+        
+        #Determines the state
+        self.state = args.get("state", "us") #default is "us"
 
-		#If this is zone/county id rather than a state, this must be set to true.
-		self.loc = args.get("loc", False)
+        #If this is zone/county id rather than a state, this must be set to true.
+        self.loc = args.get("loc", False)
 
-		#Cache System
-		self.cap = Cache()
-		self.summary = Cache()
-		self.title = Cache()
-		self.id = Cache()
+        #Cache System
+        self.cap = Cache()
+        self.summary = Cache()
+        self.title = Cache()
+        self.id = Cache()
 
-	#requests the data for our object
-	def load(self):
-		#empty the cache system.
-		self.cap.clean_out() 
-		self.summary.clean_out()
-		self.title.clean_out()
-		self.id.clean_out()
-		return self.request_obj.load()
+    #requests the data for our object
+    def load(self):
+        #empty the cache system.
+        self.cap.clean_out() 
+        self.summary.clean_out()
+        self.title.clean_out()
+        self.id.clean_out()
+        return self.request_obj.load()
 
-	def parse(self,limit=None): #If called, it will parse the entire feed.
-		limit = self.decide_limit(limit)
-		self.get_cap(limit)
-		self.get_summary(limit)
-		self.get_title(limit)
-		self.get_id(limit)
-		return True
+    def parse(self,limit=None): #If called, it will parse the entire feed.
+        limit = self.decide_limit(limit)
+        self.get_cap(limit)
+        self.get_summary(limit)
+        self.get_title(limit)
+        self.get_id(limit)
+        return True
 
 
-	def change_area(self, **kwargs): #Changes area request info
-		area = kwargs.get("area")
-		self.loc = bool(kwargs.get("is_loc"))
-		onload = kwargs.get("onload")
-		self.request_obj.change_state(loc)
+    def change_area(self, **kwargs): #Changes area request info
+        area = kwargs.get("area")
+        self.loc = bool(kwargs.get("is_loc"))
+        onload = kwargs.get("onload")
+        self.request_obj.change_state(loc)
 
-	def decide_limit(self, _limit_):
-		return _limit_ if _limit_ else self._limit
-	
-	def get_entries(self):
-		return self.request_obj.entries
+    def decide_limit(self, _limit_):
+        return _limit_ if _limit_ else self._limit
+    
+    def get_entries(self):
+        return self.request_obj.entries
 
-	def get_raw_xml(self):
-		return self.request_obj.alert_raw
-	
-	def get_cap(self,limit = None):
-		limit = self.decide_limit(limit)
-		if self.cap.check(limit):
-			return self.cap.read(limit)
-		else:
-			self.cap.set_dat(self.request_obj.get_cap(limit),limit)
-			return self.cap.read(limit)
+    def get_raw_xml(self):
+        return self.request_obj.alert_raw
+    
+    def get_cap(self,limit = None):
+        limit = self.decide_limit(limit)
+        if self.cap.check(limit):
+            return self.cap.read(limit)
+        else:
+            self.cap.set_dat(self.request_obj.get_cap(limit),limit)
+            return self.cap.read(limit)
 
-	def get_summary(self, limit=None):
-		limit = self.decide_limit(limit)
-		if self.summary.check(limit):
-			return self.summary.read(limit)
-		else:
-			self.summary.set_dat(self.request_obj.get_summary(limit),limit)
-			return self.summary.read(limit)
+    def get_summary(self, limit=None):
+        limit = self.decide_limit(limit) 
+        if self.summary.check(limit):
+            return self.summary.read(limit)
+        else:
+            self.summary.set_dat(self.request_obj.get_summary(limit),limit)
+            return self.summary.read(limit)
 
-	def get_title(self,limit=None):
-		limit = self.decide_limit(limit)
-		if self.title.check(limit):
-			return self.title.read(limit)
-		else:
-			self.title.set_dat(self.request_obj.get_title(limit),limit)
-			return self.title.read(limit)
+    def get_title(self,limit=None):
+        limit = self.decide_limit(limit)
+        if self.title.check(limit):
+            return self.title.read(limit)
+        else:
+            self.title.set_dat(self.request_obj.get_title(limit),limit)
+            return self.title.read(limit)
 
-	def get_id(self, limit=None):
-		limit = self.decide_limit(limit)
-		if self.id.check(limit):
-			return self.id.read(limit)
-		else:
-			self.id.set_dat(self.request_obj.get_id(limit),limit)
-			return self.id.read(limit)
-	#END Request Methods
-	def get_report(self, **kwargs):
-		raw_id = (kwargs.get("id"))
-		limit = (self.decide_limit(kwargs.get("limit")))
-		_id_ = raw_id if (raw_id) else self.request_obj.get_id(limit)
-		_bulk_ = bool(kwargs.get("bulk"))
-		if _bulk_:
-			def gen_report(_id_):
-				for x in (_id_ if type(_id_) is list else list(_id_)):
-					yield toolbelt.id2report(x)
-			return list(gen_report(_id_))
-		else:
-			return toolbelt.id2report(_id_)
-	#gets all data. Can optionly include reports or only reports.
-	def get_all(self, **kwargs):
-		include_report = bool(kwargs.get("reports"))
-		only_reports = bool(kwargs.get("only_reports"))
-		limit = self.decide_limit(kwargs.get("limit"))
-		return toolbelt.get_all(self, limit=limit, greport=include_report, only_report=only_reports)
-	#Returns True if request returned back any warnings, False if not. (Only returns False Valid states with no current warnings, 404 errors will still raise an error)
-	def warnings(self):
-		try:
-			return self.request_obj.has_warnings
-		except:
-			print("Warning: Server returned 404")
-			return False
+    def get_id(self, limit=None):
+        limit = self.decide_limit(limit)
+        if self.id.check(limit):
+            return self.id.read(limit)
+        else:
+            self.id.set_dat(self.request_obj.get_id(limit),limit)
+            return self.id.read(limit)
+    #END Request Methods
+    def get_report(self, **kwargs):
+        raw_id = (kwargs.get("id"))
+        limit = (self.decide_limit(kwargs.get("limit")))
+        _id_ = raw_id if (raw_id) else self.request_obj.get_id(limit)
+        _bulk_ = bool(kwargs.get("bulk"))
+        if _bulk_:
+            def gen_report(_id_):
+                for x in (_id_ if type(_id_) is list else list(_id_)):
+                    yield toolbelt.id2report(x)
+            return list(gen_report(_id_))
+        else:
+            return toolbelt.id2report(_id_)
+    #gets all data. Can optionly include reports or only reports.
+    def get_all(self, **kwargs):
+        include_report = bool(kwargs.get("reports"))
+        only_reports = bool(kwargs.get("only_reports"))
+        limit = self.decide_limit(kwargs.get("limit"))
+        return toolbelt.get_all(self, limit=limit, greport=include_report, only_report=only_reports)
+    #Returns True if request returned back any warnings, False if not. (Only returns False Valid states with no current warnings, 404 errors will still raise an error)
+    def warnings(self):
+        try:
+            return self.request_obj.has_warnings
+        except:
+            print("Warning: Server returned 404")
+            return False

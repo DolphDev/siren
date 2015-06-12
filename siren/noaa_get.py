@@ -5,6 +5,5 @@ import urllib2
 #Gets data, currently returns the CAP feed (XML from the alert.weather.gov server)
 
 def get(url):
-	response = urllib2.urlopen(url)
-	return response.read()
-
+    response = urllib2.urlopen(url)
+    return response.read()
