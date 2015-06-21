@@ -162,24 +162,59 @@ class Siren(object):
             self.id.set_dat(self.request_obj.get_id(limit),limit)
             return self.id.read(limit)
     #END Request Methods
+
+    #The report and get_all() related methods need a cleanup.
+    #Currently code is only slightly changed.
+    #Moved out of toolbelt to __init__.py. Needs a Cleanup
+    def _id_report(self, id_url, entryint=0):
+        return request.report(id_url[0]["id"].replace("http://","https://"))
+
+    def _gen_report(self, _id_):
+        for x in (_id_ if type(_id_) is list else list(_id_)):
+            yield self._id2report(x)
+
     def get_report(self, **kwargs):
         raw_id = (kwargs.get("id"))
         limit = (self.decide_limit(kwargs.get("limit")))
         _id_ = raw_id if (raw_id) else self.request_obj.get_id(limit)
         _bulk_ = bool(kwargs.get("bulk"))
         if _bulk_:
-            def gen_report(_id_):
-                for x in (_id_ if type(_id_) is list else list(_id_)):
-                    yield toolbelt.id2report(x)
             return list(gen_report(_id_))
         else:
-            return toolbelt.id2report(_id_)
-    #gets all data. Can optionly include reports or only reports.
+            return self._id_report(_id_)
+
+
+    def _all_gen(self, greport, only_report, limit=1):
+        limit = limit if limit != None else (self.limit if self.limit != None else 25)
+        _cap_ = self.get_cap()
+        _id_ = self.get_id()
+        _title_ = self.get_title()
+        _summary_ = self.get_summary()
+        if greport and not only_report:
+            for x in xrange(0, limit if len(_cap_) > limit else len(_cap_)):
+                report = _id2report(_id_, x)
+                report.load()
+                yield {"report":{"meta":siren.request.report.get_meta(),"info":report.get_info()}, "id":_id_[x]["id"],"title":_title_[x]["title"],"summary":_summary_[x]["summary"],"cap":_cap_[x]}
+       
+        elif greport and only_report:
+            for x in xrange(0,limit if len(_cap_) > limit else len(_cap_)):
+                report = id2report(_id_,x)
+                report.load()
+                yield {"report":{"meta":siren.request.report.get_meta(),"info":report.get_info()}, "id":_id_[x]["id"]}
+        
+        else:
+            for x in xrange(0,limit if len(_cap_) > limit else len(_cap_)):
+                yield {"id":_id_[x]["id"],"title":_title_[x]["title"],"summary":_summary_[x]["summary"],"cap":_cap_[x]}
+
+    def _get_all(self, limit=5, greport=False, only_report=False):
+        return list(self._all_gen(greport, only_report, limit))
+
     def get_all(self, **kwargs):
         include_report = bool(kwargs.get("reports"))
         only_reports = bool(kwargs.get("only_reports"))
         limit = self.decide_limit(kwargs.get("limit"))
-        return toolbelt.get_all(self, limit=limit, greport=include_report, only_report=only_reports)
+        return self._get_all(limit=limit, greport=include_report, only_report=only_reports)
+   
     #Returns True if request returned back any warnings, False if not. (Only returns False Valid states with no current warnings, 404 errors will still raise an error)
     def warnings(self):
         try:
