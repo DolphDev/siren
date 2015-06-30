@@ -40,6 +40,7 @@ You must use `alert.load()` if you did not set `auto_load` to `True` when creati
 
 ## Parsing 
 
+
 There is two ways this module parses the data:
 
 ##### On Demand.
@@ -85,15 +86,11 @@ All methods accept one optional argument, an interger representing a limit on ho
 
 The `NWS.siren()` object includes the `get_reports()` method, which handles getting the extended reports that the NWS generates. 
 
-It accepts a few keyword arguments.
+It accepts the following keyword arguments.
 
-* `limit` - Accepts an interger representing the limit. Default is `None` (It will use the `NWS.siren()` objects limit if there is one).
 * `id` - If supplied (and valid), the method will return supplied id's report.
-* `bulk` - if `True` it will create a report instance for every warnings report. 
 
-Depending on whether `bulk` is `True` or otherwise you will either be returned with a report instance (`Bulk` is `False`), or a list of report instances (`Bulk` is `True`).
-
-Report has 3 methods (rep is representing the report instance)
+the report instance has 3 methods (rep is representing the report instance)
 
 * `rep.load()` - Requests the data. Required for use. Returns `True` if server returned valid content, `False` if otherwise.
 * `rep.get_info()` - returns most of the info about an particular report.
@@ -120,11 +117,7 @@ Example Usage:
 This is equivalent to calling alert.get_cap()
 
 
-
-
-
-
-The 
+####The Toolbelt
 
 #Old Documentation
 
@@ -134,7 +127,7 @@ You can view the old documentation [here](https://github.com/Dolphman/siren/blob
 
 #Requirements
 
-This module requires the BeautifulSoup module, and only supports 2.x python (3.x support planned). 
+This module requires the BeautifulSoup module, and only supports 2.x python (3.x support is in progress). 
 
 # Other Info
 

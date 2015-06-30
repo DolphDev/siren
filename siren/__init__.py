@@ -167,34 +167,32 @@ class Siren(object):
     #Currently code is only slightly changed.
     #Moved out of toolbelt to __init__.py. Needs a Cleanup
     def _id_report(self, id_url, entryint=0):
-        return request.report(id_url[0]["id"].replace("http://","https://"))
-
-    def _gen_report(self, _id_):
-        for x in (_id_ if type(_id_) is list else list(_id_)):
-            yield self._id2report(x)
+        url = (id_url)[entryint][entryint]["id"] 
+        return request.report(url.replace("http://", "https://"))
 
     def get_report(self, **kwargs):
         raw_id = (kwargs.get("id"))
         limit = (self.decide_limit(kwargs.get("limit")))
         _id_ = raw_id if (raw_id) else self.request_obj.get_id(limit)
-        _bulk_ = bool(kwargs.get("bulk"))
-        if _bulk_:
-            return list(gen_report(_id_))
-        else:
-            return self._id_report(_id_)
+        entryint = kwargs.get("key", 0)
+        return self._id_report(_id_, entryint)
 
 
     def _all_gen(self, greport, only_report, limit=1):
-        limit = limit if limit != None else (self.limit if self.limit != None else 25)
+        limit = limit if not (limit is None) else (self.limit if self.limit != None else 25)
         _cap_ = self.get_cap()
         _id_ = self.get_id()
         _title_ = self.get_title()
         _summary_ = self.get_summary()
         if greport and not only_report:
-            for x in xrange(0, limit if len(_cap_) > limit else len(_cap_)):
+            for x in range(limit if len(_cap_) > limit else len(_cap_)):
                 report = _id2report(_id_, x)
                 report.load()
-                yield {"report":{"meta":siren.request.report.get_meta(),"info":report.get_info()}, "id":_id_[x]["id"],"title":_title_[x]["title"],"summary":_summary_[x]["summary"],"cap":_cap_[x]}
+                yield {"report":{"meta":siren.request.report.get_meta(),"info":report.get_info()}, 
+                        "id":_id_[x]["id"],
+                        "title":_title_[x]["title"],
+                        "summary":_summary_[x]["summary"],
+                        "cap":_cap_[x]}
        
         elif greport and only_report:
             for x in xrange(0,limit if len(_cap_) > limit else len(_cap_)):

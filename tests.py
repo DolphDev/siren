@@ -2,7 +2,6 @@
 #    Calls all methods in Siren() object
 #     Calls all methods in request() object
 import siren
-
 alert = siren.Siren() #Create the object and assigns it to `alert`
 
 
@@ -11,3 +10,10 @@ if alert.load(): #Loads the data from the server
     alert.get_entries() #
     alert.parse()
     alert.get_all()
+    alert.get_report()
+    siren.toolbelt.sort_cap(alert.get_cap())
+
+
+
+
+
