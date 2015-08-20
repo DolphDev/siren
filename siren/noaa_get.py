@@ -1,4 +1,7 @@
-import urllib2
+try:
+    import urllib.request as urllib2
+except ImportError:
+    import urllib2
 
 #Handles all fetching of data.
 
