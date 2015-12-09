@@ -1,3 +1,7 @@
+#!!! Warning! !!!#
+
+This is one of my earlier projects. I knew less then and made odd design decsions. This library was built poorly and is not usable for any use case outside of re-writing it. I plan to revist this in the future, however my work on other libraries are currently being focuses on.
+
 # siren V 0.1.0.0
 
 A Python library for the National Weather Service Public Alerts. 
