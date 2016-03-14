@@ -1,6 +1,6 @@
-#!!! Warning! !!!#
+#!!! Warning !!!#
 
-This is one of my earlier projects. I knew less then and made odd design decsions. This library was built poorly and is not usable for any use case outside of re-writing it. I plan to revist this in the future, however my work on other libraries are currently being focuses on.
+This is one of my earlier projects. I knew very litte then and made odd design decsions. This library was built poorly and is not usable for any use case outside of re-writing it. I plan to revist this in the future, however my work on other libraries are currently being focuses on. If you wish to see more of my work, checkout [nationstates](https://github.com/Dolphman/pynationstates) or [ezurl](https://github.com/Dolphman/ezurl)
 
 # siren V 0.1.0.0
 
@@ -24,13 +24,13 @@ To the create the object
 
 This also accepts keyword arguments for more advanced usage. 
 
-* `state` - Default is `"us"` (Which is the entire country, including teritories). Accepts either state abbreviations or county/zone code.
+* `state` - Default is `"us"` (Which is the entire country, including territories). Accepts either a state abbreviations or a county/zone code.
 * `loc` - Default is `False`. Must be `True` if `state` is a country/zone code. Dont include it or leave `False` if your using a state abbreviation.
 * `auto_load` - Default is `False`. If set to `True` the object will request the data on its creation. Note - You cannot check if the request was successful if done.
 * `limit` - Default is `None`. Sets a universal limit for the object. It will be used if you call a method without specifying a limit.
 
 
-###### Note: `alert` is a arbitrary variable name, it can be any valid variable name.
+###### Note: `alert` is a arbitrary variable name
 
 ## Methods
 
