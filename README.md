@@ -1,6 +1,6 @@
 #!!! Warning !!!#
 
-This is one of my earlier projects. I knew very litte then and made odd design decsions. This library was built poorly and is not usable for any use case outside of re-writing it. I plan to revist this in the future, however my work on other libraries are currently being focuses on. If you wish to see more of my work, checkout [nationstates](https://github.com/Dolphman/pynationstates) or [ezurl](https://github.com/Dolphman/ezurl)
+This is one of my earlier projects. I knew very little then and made odd design decsions. This library was built poorly and is not usable for any use case outside of re-writing it. I plan to revist this in the future, however my work on other libraries are currently being focuses on. If you wish to see more of my work, checkout [nationstates](https://github.com/Dolphman/pynationstates) or [ezurl](https://github.com/Dolphman/ezurl)
 
 # siren V 0.1.0.0
 
